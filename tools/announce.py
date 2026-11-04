@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Open an Outlook (or default mail app) draft announcing the next journal club
+"""Open an Outlook draft (default mail app if Outlook is not installed) announcing the next journal club
 session to everyone who signed up, with all addresses in BCC.
 
 Setup (once):
@@ -95,8 +95,10 @@ def main():
         sys.exit("The sheet has no email addresses yet.")
     q = urllib.parse.quote
     link = f"mailto:?bcc={','.join(emails)}&subject={q(subject)}&body={q(body)}"
-    subprocess.run(["open", link], check=True)
-    print(f"Opened a draft to {len(emails)} people for {date}. Check it and press Send.")
+    # Open in Outlook if it is installed, otherwise the default mail app.
+    app = ["-a", "Microsoft Outlook"] if os.path.isdir("/Applications/Microsoft Outlook.app") else []
+    subprocess.run(["open", *app, link], check=True)
+    print(f"Opened an Outlook draft to {len(emails)} people for {date}. Check it and press Send.")
 
 
 if __name__ == "__main__":
