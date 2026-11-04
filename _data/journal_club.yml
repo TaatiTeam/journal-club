@@ -1,0 +1,77 @@
+# -----------------------------------------------------------------------------
+# Journal club data. Everything on /journal-club/ is rendered from this file,
+# so you never need to edit the page itself.
+#
+# Photos: put files in assets/img/journal_club/ and reference them below as
+# "journal_club/<file>". Any path under assets/img/ works. If the file is
+# missing, the page shows the person's initials instead, so nothing breaks
+# while you collect pictures.
+#
+# Dates: write them as YYYY-MM-DD without quotes.
+# -----------------------------------------------------------------------------
+
+name: Journal Club
+tagline: >
+  Reading group on machine learning for healthcare and computer vision, run by
+  Dr. Babak Taati's group at the University of Toronto and KITE.
+
+# Meeting logistics. A field left blank is not shown.
+meeting:
+  cadence: "" # e.g. "Every Thursday"
+  time: "" # e.g. "12:00–13:00 ET"
+  location: "" # e.g. "KITE, 550 University Ave, Room 12-123"
+  format: "" # e.g. "Hybrid; Zoom link goes out to the mailing list"
+  contact: kimia.shaban@mail.utoronto.ca
+  signup_url: "" # mailing list or calendar link, if there is one
+  signup_label: Join the mailing list
+
+# Organizing team, in display order.
+# `talks` is optional: the presentations that person has given at the club.
+organizers:
+  - name: Babak Taati
+    role: Faculty lead
+    affiliation: University of Toronto · KITE Research Institute, UHN
+    image: journal_club/babak.jpg
+    url: https://www.cs.toronto.edu/~taati/
+    bio: ""
+    talks: []
+
+  - name: Vida # TODO: full name
+    role: Organizer
+    affiliation: ""
+    image: journal_club/vida.jpg
+    url: ""
+    bio: ""
+    talks: []
+
+  - name: Kimia Shaban
+    role: Organizer
+    affiliation: University of Toronto · Vector Institute · KITE
+    image: journal_club/kimia.jpg
+    url: /
+    bio: >
+      PhD student in Computer Science, working on AI for healthcare and
+      computer vision.
+    talks: []
+    # Example of a filled-in talks list:
+    # talks:
+    #   - title: "When Does RL Help Medical VLMs?"
+    #     date: 2026-03-12
+    #     paper: https://arxiv.org/abs/2603.01301
+    #     slides: ""
+
+# Upcoming sessions, soonest first. Move an entry to `past` after it happens.
+# Example entry:
+#   - date: 2026-11-20
+#     speaker: Jane Doe
+#     affiliation: University of Toronto
+#     speaker_url: ""
+#     title: "Paper or talk title"
+#     paper: https://arxiv.org/abs/...
+#     abstract: "One or two sentences on what will be discussed."
+#     location: "" # only if different from the default above
+upcoming: []
+
+# Past sessions, most recent first. Same fields as `upcoming`, plus optional
+# `slides` and `recording` links.
+past: []

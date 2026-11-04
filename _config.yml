@@ -1,0 +1,11 @@
+title: Journal Club
+description: Reading group on machine learning for healthcare and computer vision, run by Dr. Babak Taati's group at the University of Toronto and KITE.
+# GitHub Pages URL for this repo: https://taatiteam.github.io/journal-club/
+url: https://taatiteam.github.io
+baseurl: /journal-club
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

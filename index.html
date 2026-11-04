@@ -1,0 +1,94 @@
+---
+layout: default
+---
+
+
+{% assign jc = site.data.journal_club %}
+{% assign m = jc.meeting %}
+
+<div class="journal-club">
+
+<p class="jc-tagline">{{ jc.tagline }}</p>
+
+{% if m.cadence != blank or m.time != blank or m.location != blank or m.format != blank or m.contact != blank %}
+
+<ul class="jc-meta list-unstyled">
+  {% if m.cadence != blank or m.time != blank %}
+    <li><i class="fa-regular fa-clock"></i>{{ m.cadence }}{% if m.cadence != blank and m.time != blank %}, {% endif %}{{ m.time }}</li>
+  {% endif %}
+  {% if m.location != blank %}<li><i class="fa-solid fa-location-dot"></i>{{ m.location }}</li>{% endif %}
+  {% if m.format != blank %}<li><i class="fa-solid fa-video"></i>{{ m.format }}</li>{% endif %}
+  {% if m.contact != blank %}<li><i class="fa-regular fa-envelope"></i><a href="mailto:{{ m.contact }}">{{ m.contact }}</a></li>{% endif %}
+</ul>
+{% endif %}
+
+{% if m.signup_url != blank %}
+
+<p><a class="jc-btn" href="{{ m.signup_url }}">{{ m.signup_label | default: 'Join the mailing list' }}</a></p>
+{% endif %}
+
+<h2 id="upcoming">Upcoming speakers</h2>
+
+{% if jc.upcoming and jc.upcoming.size > 0 %}
+{% for s in jc.upcoming %}
+{% include journal_club_session.liquid session=s %}
+{% endfor %}
+{% else %}
+
+  <p class="jc-empty">The next sessions will be announced here.</p>
+{% endif %}
+
+<h2 id="team">Organizing team</h2>
+
+<div class="row jc-team">
+{% for person in jc.organizers %}
+  {% assign img_rel = 'assets/img/' | append: person.image %}
+  {% assign img_file = site.static_files | where_exp: 'f', 'f.path contains img_rel' | first %}
+  {% assign words = person.name | split: ' ' %}
+  {% assign initials = '' %}
+  {% for w in words limit: 2 %}{% assign first = w | slice: 0 %}{% assign initials = initials | append: first %}{% endfor %}
+  <div class="col-sm-6 col-md-4 mb-4">
+    <div class="card h-100 jc-person">
+      <div class="card-body text-center">
+        <div class="jc-avatar">
+          {% if person.image != blank and img_file %}
+            {% include figure.liquid loading="eager" path=img_rel sizes="140px" alt=person.name %}
+          {% else %}
+            <div class="jc-initials" aria-hidden="true">{{ initials }}</div>
+          {% endif %}
+        </div>
+        <h3 class="card-title">
+          {% if person.url != blank %}<a href="{{ person.url | relative_url }}">{{ person.name }}</a>{% else %}{{ person.name }}{% endif %}
+        </h3>
+        {% if person.role != blank %}<div class="jc-role">{{ person.role }}</div>{% endif %}
+        {% if person.affiliation != blank %}<div class="jc-affil">{{ person.affiliation }}</div>{% endif %}
+        {% if person.bio != blank %}<div class="jc-bio">{{ person.bio | markdownify }}</div>{% endif %}
+        {% if person.talks and person.talks.size > 0 %}
+          <div class="jc-talks">
+            <div class="jc-talks-label">Presentations</div>
+            <ul class="list-unstyled">
+              {% for t in person.talks %}
+                <li>
+                  {% if t.date %}<span class="jc-talk-date">{{ t.date | date: '%b %Y' }}</span>{% endif %}
+                  {% if t.paper != blank %}<a href="{{ t.paper }}">{{ t.title }}</a>{% else %}{{ t.title }}{% endif %}
+                  {% if t.slides != blank %} · <a href="{{ t.slides }}">slides</a>{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+{% if jc.past and jc.past.size > 0 %}
+
+<h2 id="past">Past sessions</h2>
+{% for s in jc.past %}
+  {% include journal_club_session.liquid session=s %}
+{% endfor %}
+{% endif %}
+
+</div>

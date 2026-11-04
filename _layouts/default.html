@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ site.data.journal_club.name | default: site.title }}</title>
+    <meta name="description" content="{{ site.description }}">
+    <meta property="og:title" content="{{ site.data.journal_club.name | default: site.title }}">
+    <meta property="og:description" content="{{ site.description }}">
+    <meta property="og:url" content="{{ site.url }}{{ site.baseurl }}/">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  </head>
+  <body>
+    <main class="wrap">
+      <h1>{{ site.data.journal_club.name | default: site.title }}</h1>
+      {{ content }}
+    </main>
+    <footer class="wrap site-footer">
+      <p>Maintained by the organizing team. To add or change a session, edit <a href="https://github.com/TaatiTeam/journal-club/blob/main/_data/journal_club.yml">_data/journal_club.yml</a>.</p>
+    </footer>
+  </body>
+</html>
