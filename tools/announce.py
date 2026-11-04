@@ -8,9 +8,9 @@ Setup (once):
      (https://docs.google.com/spreadsheets/d/<ID>/edit).
   2. Save a config file at ~/.journal-club.json:
        {"sheet_id": "<ID>", "from_note": "Kimia",
-        "always_bcc": ["someone@example.org"]}
-     always_bcc is optional: addresses that get every email even if they
-     never filled in the form (the organizing team, for example).
+        "recipients": ["someone@example.org"]}
+     recipients is optional: addresses added by hand. They get every email
+     alongside everyone who signed up through the form.
      Keep this file on your laptop only; it is not in the repo.
 
 Run:  python3 tools/announce.py            (opens a draft for the next session)
@@ -76,7 +76,7 @@ def main():
     dry = "--dry-run" in sys.argv
     cfg = load_config()
     emails = emails_from_sheet(cfg["sheet_id"])
-    for e in cfg.get("always_bcc", []):
+    for e in cfg.get("recipients", []):
         e = e.strip().lower()
         if "@" in e and e not in emails:
             emails.append(e)
