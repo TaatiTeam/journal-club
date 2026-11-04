@@ -39,8 +39,6 @@ archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
 archive_label: Sessions from 2019 to 2024 are listed on Babak Taati's site.
 
 # Organizing team, in display order.
-# `talks` lists the presentations that person has given at the club
-# (title, date, optional paper and slides links).
 organizers:
   - name: Kimia Shaban
     role: Lead organizer
@@ -51,11 +49,6 @@ organizers:
       Runs the journal club: sets the schedule, invites speakers, and keeps
       this page up to date. Works on computer vision and vision-language
       models.
-    talks:
-      - title: "When Does RL Help Medical VLMs? Disentangling Vision, SFT, and RL Gains"
-        date: 2026-03-24
-        paper: https://arxiv.org/abs/2603.01301
-        slides: ""
 
   - name: Babak Taati
     role: Faculty lead
@@ -66,7 +59,6 @@ organizers:
       Holds the Barbara G. Stymiest Chair in Rehabilitation Technology
       Research and leads the KITE Aging Team. Hosts the journal club and
       keeps the long-term archive.
-    talks: []
 
   - name: Vida Adeli
     role: Former organizer
@@ -76,19 +68,6 @@ organizers:
     bio: >
       Works on generative models for 3D human motion, animation, and clinical
       gait analysis. Organized the journal club before Kimia.
-    talks:
-      - title: "VQ-Diffusion (CVPR 2022)"
-        date: 2024-08-13
-      - title: "Implicit Neural Representations for Variable Length Human Motion Generation (ECCV 2022)"
-        date: 2024-04-23
-      - title: "MotionGPT"
-        date: 2023-11-07
-      - title: "MoDi (CVPR 2023)"
-        date: 2023-06-13
-      - title: "Diffusion Video Autoencoders (CVPR 2023)"
-        date: 2023-04-11
-      - title: "HybrIK"
-        date: 2022-08-18
 
 # Upcoming sessions, soonest first. Move an entry to `past` after it happens.
 # Only `date` and `speaker` are needed; blank fields are hidden.
