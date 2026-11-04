@@ -1,77 +1,176 @@
 # -----------------------------------------------------------------------------
-# Journal club data. Everything on /journal-club/ is rendered from this file,
+# Journal club data. Everything on the page is rendered from this file,
 # so you never need to edit the page itself.
 #
 # Photos: put files in assets/img/journal_club/ and reference them below as
-# "journal_club/<file>". Any path under assets/img/ works. If the file is
-# missing, the page shows the person's initials instead, so nothing breaks
-# while you collect pictures.
+# "journal_club/<file>". If the file is missing, the page shows the person's
+# initials instead, so nothing breaks while you collect pictures.
 #
-# Dates: write them as YYYY-MM-DD without quotes.
+# Dates: write them as YYYY-MM-DD without quotes. Quote times ("1:00 PM").
 # -----------------------------------------------------------------------------
 
 name: Journal Club
 tagline: >
-  Reading group on machine learning for healthcare and computer vision, run by
-  Dr. Babak Taati's group at the University of Toronto and KITE.
+  Paper discussions and guest talks on computer vision and machine learning,
+  with a focus on human motion and health applications. Run by Dr. Babak
+  Taati's group at the University of Toronto, KITE, and the Vector Institute
+  since 2019.
 
 # Meeting logistics. A field left blank is not shown.
 meeting:
-  cadence: "" # e.g. "Every Thursday"
-  time: "" # e.g. "12:00–13:00 ET"
-  location: "" # e.g. "KITE, 550 University Ave, Room 12-123"
-  format: "" # e.g. "Hybrid; Zoom link goes out to the mailing list"
+  cadence: Tuesdays
+  time: "1:00–2:00 PM ET"
+  location: Vector Institute, Schwartz Reisman Innovation Campus, 108 College St, Toronto
+  format: "" # e.g. "In person, with Zoom for remote speakers"
   contact: kimia.shaban@mail.utoronto.ca
+  # Zoom: paste the meeting link here and a "Join on Zoom" button appears.
+  # This page is public, so put a passcode or waiting room on the meeting,
+  # or leave this blank and send the link by email instead.
+  zoom_url: ""
+  zoom_label: Join on Zoom
   signup_url: "" # mailing list or calendar link, if there is one
   signup_label: Join the mailing list
 
+# Link shown under "Past sessions" for the older history.
+archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
+archive_label: Sessions from 2019 to 2024 are listed on Babak Taati's site.
+
 # Organizing team, in display order.
-# `talks` is optional: the presentations that person has given at the club.
+# `talks` lists the presentations that person has given at the club
+# (title, date, optional paper and slides links).
 organizers:
+  - name: Kimia Shaban
+    role: Lead organizer
+    affiliation: PhD student, Computer Science, University of Toronto · Vector Institute · KITE
+    image: journal_club/kimia.jpg
+    url: https://kimiashaban.github.io/
+    bio: >
+      Runs the journal club: sets the schedule, invites speakers, and keeps
+      this page up to date. Works on computer vision and vision-language
+      models.
+    talks:
+      - title: "When Does RL Help Medical VLMs? Disentangling Vision, SFT, and RL Gains"
+        date: 2026-03-24
+        paper: https://arxiv.org/abs/2603.01301
+        slides: ""
+
   - name: Babak Taati
     role: Faculty lead
-    affiliation: University of Toronto · KITE Research Institute, UHN
+    affiliation: Senior Scientist, KITE Research Institute, UHN · Associate Professor, Computer Science, University of Toronto · Faculty Affiliate, Vector Institute
     image: journal_club/babak.jpg
     url: https://www.cs.toronto.edu/~taati/
-    bio: ""
-    talks: []
-
-  - name: Vida # TODO: full name
-    role: Organizer
-    affiliation: ""
-    image: journal_club/vida.jpg
-    url: ""
-    bio: ""
-    talks: []
-
-  - name: Kimia Shaban
-    role: Organizer
-    affiliation: University of Toronto · Vector Institute · KITE
-    image: journal_club/kimia.jpg
-    url: /
     bio: >
-      PhD student in Computer Science, working on AI for healthcare and
-      computer vision.
+      Holds the Barbara G. Stymiest Chair in Rehabilitation Technology
+      Research and leads the KITE Aging Team. Hosts the journal club and
+      keeps the long-term archive.
     talks: []
-    # Example of a filled-in talks list:
-    # talks:
-    #   - title: "When Does RL Help Medical VLMs?"
-    #     date: 2026-03-12
-    #     paper: https://arxiv.org/abs/2603.01301
-    #     slides: ""
+
+  - name: Vida Adeli
+    role: Former organizer
+    affiliation: PhD candidate, Computer Science, University of Toronto · Vector Institute · KITE
+    image: journal_club/vida.jpg
+    url: https://vadeli.github.io/
+    bio: >
+      Works on generative models for 3D human motion, animation, and clinical
+      gait analysis. Organized the journal club before Kimia.
+    talks:
+      - title: "VQ-Diffusion (CVPR 2022)"
+        date: 2024-08-13
+      - title: "Implicit Neural Representations for Variable Length Human Motion Generation (ECCV 2022)"
+        date: 2024-04-23
+      - title: "MotionGPT"
+        date: 2023-11-07
+      - title: "MoDi (CVPR 2023)"
+        date: 2023-06-13
+      - title: "Diffusion Video Autoencoders (CVPR 2023)"
+        date: 2023-04-11
+      - title: "HybrIK"
+        date: 2022-08-18
 
 # Upcoming sessions, soonest first. Move an entry to `past` after it happens.
-# Example entry:
-#   - date: 2026-11-20
+# Only `date` and `speaker` are needed; blank fields are hidden.
+#   - date: 2026-11-18
 #     speaker: Jane Doe
 #     affiliation: University of Toronto
 #     speaker_url: ""
 #     title: "Paper or talk title"
 #     paper: https://arxiv.org/abs/...
 #     abstract: "One or two sentences on what will be discussed."
-#     location: "" # only if different from the default above
+#     time: "" # only if different from the default above
+#     location: "" # e.g. the room, or "Zoom only"
 upcoming: []
 
 # Past sessions, most recent first. Same fields as `upcoming`, plus optional
-# `slides` and `recording` links.
-past: []
+# `slides` and `recording` links. 2025 onward copied from Babak's archive.
+past:
+  - date: 2026-09-29
+    time: "9:00 AM"
+    speaker: Terence Leung and team
+    affiliation: UCL / HKU
+    title: "Training a humanoid robot to reproduce Parkinsonian gait from CARE-PD gait data"
+  - date: 2026-07-28
+    speaker: Enming Zhang
+  - date: 2026-07-14
+    speaker: Andrew Fleet
+    title: "RigAnyFace (NeurIPS 2025)"
+  - date: 2026-06-23
+    speaker: Alireza Keshavarzian
+    title: "Random Representation Techniques for Time Series Forecasting"
+  - date: 2026-06-02
+    speaker: Andrew Peng
+  - date: 2026-04-21
+    speaker: Armen and Minh
+    title: "Autoresearch (karpathy/autoresearch)"
+  - date: 2026-04-14
+    speaker: Lucas Mercier and Anaïs Chaumeil
+    title: "Human pose estimation for gait analysis"
+  - date: 2026-04-07
+    time: "10:00 AM"
+    speaker: Liang Xu
+    title: "Inter-X (CVPR 2024), ReGenNet (CVPR 2024), ActFormer (ICCV 2023)"
+  - date: 2026-03-24
+    speaker: Kimia Shaban
+    title: "When Does RL Help Medical VLMs? Disentangling Vision, SFT, and RL Gains"
+    paper: https://arxiv.org/abs/2603.01301
+  - date: 2026-03-17
+    speaker: Amir
+    title: "Face2Scene (CVPR 2025)"
+  - date: 2026-01-13
+    speaker: Puyin (Pauline) Li
+    affiliation: Stanford
+    title: "QuantiPhy"
+  - date: 2025-11-25
+    time: "12:00 PM"
+    speaker: Saman Motamed
+    affiliation: INSAIT
+    title: "TRAVL and Physics-IQ"
+  - date: 2025-11-25
+    time: "12:00 PM"
+    speaker: Donghoon Ahn
+    affiliation: KAIST AI
+    title: "Fine-Grained Perturbation Guidance via Attention Head Selection (NeurIPS 2025)"
+  - date: 2025-09-23
+    speaker: Arshak Rezvani and Maryam Mirian
+    affiliation: UBC
+    title: "DiffuseGaitNet"
+  - date: 2025-08-12
+    speaker: Javad
+    title: "Localizing Knowledge in Diffusion Transformers"
+  - date: 2025-07-22
+    speaker: Diwei Wang
+    title: "Gait video analysis with knowledge augmentation in a vision-language model (MICCAI 2024)"
+  - date: 2025-07-08
+    speaker: Muzammil
+    title: "Pixel3DMM"
+  - date: 2025-02-18
+    speaker: Armen
+    title: "What matters when building vision-language models?"
+  - date: 2025-02-04
+    speaker: Soroush
+    title: "SynthLight"
+  - date: 2025-01-21
+    speaker: Ali
+    title: "Scanning Trojaned Models Using OOD Samples (NeurIPS 2024); RODEO (ICML 2024)"
+  - date: 2025-01-08
+    speaker: Paper discussion
+    title: "DiffuseMix (CVPR 2024)"

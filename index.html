@@ -22,9 +22,12 @@ layout: default
 </ul>
 {% endif %}
 
-{% if m.signup_url != blank %}
+{% if m.signup_url != blank or m.zoom_url != blank %}
 
-<p><a class="jc-btn" href="{{ m.signup_url }}">{{ m.signup_label | default: 'Join the mailing list' }}</a></p>
+<p class="jc-buttons">
+  {% if m.zoom_url != blank %}<a class="jc-btn" href="{{ m.zoom_url }}"><i class="fa-solid fa-video"></i>{{ m.zoom_label | default: "Join on Zoom" }}</a>{% endif %}
+  {% if m.signup_url != blank %}<a class="jc-btn" href="{{ m.signup_url }}">{{ m.signup_label | default: "Join the mailing list" }}</a>{% endif %}
+</p>
 {% endif %}
 
 <h2 id="upcoming">Upcoming speakers</h2>
@@ -89,6 +92,11 @@ layout: default
 {% for s in jc.past %}
   {% include journal_club_session.liquid session=s %}
 {% endfor %}
+{% endif %}
+
+{% if jc.archive_url != blank %}
+
+<p class="jc-archive"><a href="{{ jc.archive_url }}">{{ jc.archive_label | default: "Earlier sessions" }}</a></p>
 {% endif %}
 
 </div>
