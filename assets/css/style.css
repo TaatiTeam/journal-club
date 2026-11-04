@@ -55,6 +55,7 @@ h3 { font-size: 1.15rem; font-weight: 500; }
 .jc-buttons .jc-btn { margin-right: 0.5rem; }
 .jc-buttons .jc-btn i { margin-right: 0.4rem; }
 .jc-archive { margin-top: 1rem; color: var(--text-light); }
+.jc-note { margin-top: -0.5rem; font-size: 0.9rem; color: var(--text-light); }
 .jc-empty { color: var(--text-light); font-style: italic; }
 
 .jc-session { display: flex; gap: 1.25rem; padding: 0.85rem 0; border-bottom: 1px solid var(--divider); }

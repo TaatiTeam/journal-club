@@ -12,6 +12,7 @@ layout: default
 {% assign contact = m.contact | default: '' %}
 {% assign zoom_url = m.zoom_url | default: '' %}
 {% assign signup_url = m.signup_url | default: '' %}
+{% assign signup_note = m.signup_note | default: '' %}
 {% assign archive_url = jc.archive_url | default: '' %}
 
 <div class="journal-club">
@@ -36,6 +37,7 @@ layout: default
   {% if zoom_url != '' %}<a class="jc-btn" href="{{ zoom_url }}"><i class="fa-solid fa-video"></i>{{ m.zoom_label | default: 'Join on Zoom' }}</a>{% endif %}
   {% if signup_url != '' %}<a class="jc-btn" href="{{ signup_url }}">{{ m.signup_label | default: 'Join the mailing list' }}</a>{% endif %}
 </p>
+{% if signup_note != '' %}<p class="jc-note">{{ signup_note }}</p>{% endif %}
 {% endif %}
 
 <h2 id="upcoming">Upcoming speakers</h2>

@@ -32,8 +32,10 @@ meeting:
   # (or listserv) join link here once it exists, e.g.
   # https://groups.google.com/g/cv-journal-club. A calendar file with the
   # weekly slot and Zoom link is at assets/journal-club.ics for emails.
-  signup_url: ""
+  signup_url: https://groups.google.com/g/computer-vision-journal-club
   signup_label: Join the mailing list
+  # Short line shown under the buttons. Blank hides it.
+  signup_note: "No Google account? Email Kimia and she will add you to the list."
 
 # Link shown under "Past sessions" for the older history.
 archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
