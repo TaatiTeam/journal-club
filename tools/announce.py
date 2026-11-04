@@ -8,9 +8,11 @@ Setup (once):
      (https://docs.google.com/spreadsheets/d/<ID>/edit).
   2. Save a config file at ~/.journal-club.json:
        {"sheet_id": "<ID>", "from_note": "Kimia",
+        "to": ["kimia@example.org"], "cc": ["babak@example.org"],
         "recipients": ["someone@example.org"]}
-     recipients is optional: addresses added by hand. They get every email
-     alongside everyone who signed up through the form.
+     to / cc: who goes in the To and Cc fields. Everyone else (recipients
+     listed by hand plus everyone who signed up through the form) goes in
+     Bcc, so members never see each other's addresses.
      Keep this file on your laptop only; it is not in the repo.
 
 Run:  python3 tools/announce.py            (opens a draft for the next session)
@@ -75,10 +77,11 @@ def next_session():
 def main():
     dry = "--dry-run" in sys.argv
     cfg = load_config()
-    emails = emails_from_sheet(cfg["sheet_id"])
-    for e in cfg.get("recipients", []):
-        e = e.strip().lower()
-        if "@" in e and e not in emails:
+    norm = lambda xs: [x.strip().lower() for x in xs if "@" in x]
+    to, cc = norm(cfg.get("to", [])), norm(cfg.get("cc", []))
+    emails = []
+    for e in norm(cfg.get("recipients", [])) + emails_from_sheet(cfg["sheet_id"]):
+        if e not in emails and e not in to and e not in cc:
             emails.append(e)
     s = next_session()
     if not s or not s.get("date"):
@@ -96,16 +99,17 @@ def main():
         + f"\nZoom link and schedule: {PAGE_URL}\n\nSee you there,\n{cfg.get('from_note', '')}\n"
     )
     if dry:
-        print(f"BCC ({len(emails)}): {', '.join(emails)}\n\nSubject: {subject}\n\n{body}")
+        print(f"TO: {', '.join(to)}\nCC: {', '.join(cc)}\nBCC ({len(emails)}): {', '.join(emails)}\n\nSubject: {subject}\n\n{body}")
         return
-    if not emails:
-        sys.exit("The sheet has no email addresses yet.")
+    if not (to or cc or emails):
+        sys.exit("Nobody to send to: add `to`/`cc`/`recipients` in the config or wait for sign-ups.")
     q = urllib.parse.quote
-    link = f"mailto:?bcc={','.join(emails)}&subject={q(subject)}&body={q(body)}"
+    link = (f"mailto:{','.join(to)}?cc={','.join(cc)}&bcc={','.join(emails)}"
+            f"&subject={q(subject)}&body={q(body)}")
     # Open in Outlook if it is installed, otherwise the default mail app.
     app = ["-a", "Microsoft Outlook"] if os.path.isdir("/Applications/Microsoft Outlook.app") else []
     subprocess.run(["open", *app, link], check=True)
-    print(f"Opened an Outlook draft to {len(emails)} people for {date}. Check it and press Send.")
+    print(f"Opened an Outlook draft for {date}: To {len(to)}, Cc {len(cc)}, Bcc {len(emails)}. Check it and press Send.")
 
 
 if __name__ == "__main__":
