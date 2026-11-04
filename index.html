@@ -66,13 +66,6 @@ layout: default
         {% if person.role != blank %}<div class="jc-role">{{ person.role }}</div>{% endif %}
         {% if person.affiliation != blank %}<div class="jc-affil">{{ person.affiliation }}</div>{% endif %}
         {% if person.bio != blank %}<div class="jc-bio">{{ person.bio | markdownify }}</div>{% endif %}
-                  {% if t.paper != blank %}<a href="{{ t.paper }}">{{ t.title }}</a>{% else %}{{ t.title }}{% endif %}
-                  {% if t.slides != blank %} · <a href="{{ t.slides }}">slides</a>{% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </div>
-        {% endif %}
       </div>
     </div>
   </div>
