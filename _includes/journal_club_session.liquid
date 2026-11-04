@@ -1,43 +1,52 @@
 {% comment %}
   Renders one journal club session from _data/journal_club.yml.
   Usage: {% include journal_club_session.liquid session=s %}
+  Optional fields are normalized to "" first, because a missing field is
+  not equal to `blank` in the Liquid version GitHub Pages runs.
 {% endcomment %}
 {% assign s = include.session %}
+{% assign s_time = s.time | default: '' %}
+{% assign s_speaker_url = s.speaker_url | default: '' %}
+{% assign s_affiliation = s.affiliation | default: '' %}
+{% assign s_title = s.title | default: '' %}
+{% assign s_paper = s.paper | default: '' %}
+{% assign s_abstract = s.abstract | default: '' %}
+{% assign s_location = s.location | default: '' %}
 <div class="jc-session">
   <div class="jc-date">
     {% if s.date %}{{ s.date | date: '%b %-d, %Y' }}{% else %}Date TBD{% endif %}
-    {% if s.time != blank %}
-      <div class="jc-time">{{ s.time }}</div>
+    {% if s_time != '' %}
+      <div class="jc-time">{{ s_time }}</div>
     {% endif %}
   </div>
   <div class="jc-body">
     <div class="jc-speaker">
-      {% if s.speaker_url != blank -%}
-        <a href="{{ s.speaker_url }}">{{ s.speaker }}</a>
+      {% if s_speaker_url != '' -%}
+        <a href="{{ s_speaker_url }}">{{ s.speaker }}</a>
       {%- else -%}
         {{- s.speaker -}}
       {%- endif %}
-      {% if s.affiliation != blank -%}
-        <span class="jc-affil">, {{ s.affiliation }}</span>
+      {% if s_affiliation != '' -%}
+        <span class="jc-affil">, {{ s_affiliation }}</span>
       {%- endif %}
     </div>
-    {% if s.title != blank %}
+    {% if s_title != '' %}
       <div class="jc-title">
-        {% if s.paper != blank -%}
-          <a href="{{ s.paper }}">{{ s.title }}</a>
+        {% if s_paper != '' -%}
+          <a href="{{ s_paper }}">{{ s_title }}</a>
         {%- else -%}
-          {{- s.title -}}
+          {{- s_title -}}
         {%- endif %}
       </div>
     {% endif %}
-    {% if s.abstract != blank %}
-      <div class="jc-abstract">{{ s.abstract | markdownify }}</div>
+    {% if s_abstract != '' %}
+      <div class="jc-abstract">{{ s_abstract | markdownify }}</div>
     {% endif %}
-    {% if s.location != blank %}
-      <div class="jc-where"><i class="fa-solid fa-location-dot"></i>{{ s.location }}</div>
+    {% if s_location != '' %}
+      <div class="jc-where"><i class="fa-solid fa-location-dot"></i>{{ s_location }}</div>
     {% endif %}
-    {% if s.paper != blank %}
-      <div class="jc-links"><a href="{{ s.paper }}">Paper</a></div>
+    {% if s_paper != '' %}
+      <div class="jc-links"><a href="{{ s_paper }}">Paper</a></div>
     {% endif %}
   </div>
 </div>

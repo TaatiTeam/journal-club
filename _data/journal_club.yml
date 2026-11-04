@@ -81,7 +81,11 @@ organizers:
 #     abstract: "One or two sentences on what will be discussed."
 #     time: "" # only if different from the default above
 #     location: "" # e.g. the room, or "Zoom only"
-upcoming: []
+upcoming:
+  - date: 2026-11-10
+    speaker: Amirhosein Javadi
+    title: "" # TBD
+    abstract: "" # TBD
 
 # Past sessions, most recent first. Same fields as `upcoming`. Entries from
 # 2025 onward were copied from the archive on Babak's site.

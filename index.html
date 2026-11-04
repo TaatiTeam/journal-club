@@ -5,28 +5,36 @@ layout: default
 
 {% assign jc = site.data.journal_club %}
 {% assign m = jc.meeting %}
+{% assign cadence = m.cadence | default: '' %}
+{% assign mtime = m.time | default: '' %}
+{% assign location = m.location | default: '' %}
+{% assign format = m.format | default: '' %}
+{% assign contact = m.contact | default: '' %}
+{% assign zoom_url = m.zoom_url | default: '' %}
+{% assign signup_url = m.signup_url | default: '' %}
+{% assign archive_url = jc.archive_url | default: '' %}
 
 <div class="journal-club">
 
 <p class="jc-tagline">{{ jc.tagline }}</p>
 
-{% if m.cadence != blank or m.time != blank or m.location != blank or m.format != blank or m.contact != blank %}
+{% if cadence != '' or mtime != '' or location != '' or format != '' or contact != '' %}
 
 <ul class="jc-meta list-unstyled">
-  {% if m.cadence != blank or m.time != blank %}
-    <li><i class="fa-regular fa-clock"></i>{{ m.cadence }}{% if m.cadence != blank and m.time != blank %}, {% endif %}{{ m.time }}</li>
+  {% if cadence != '' or mtime != '' %}
+    <li><i class="fa-regular fa-clock"></i>{{ cadence }}{% if cadence != '' and mtime != '' %}, {% endif %}{{ mtime }}</li>
   {% endif %}
-  {% if m.location != blank %}<li><i class="fa-solid fa-location-dot"></i>{{ m.location }}</li>{% endif %}
-  {% if m.format != blank %}<li><i class="fa-solid fa-video"></i>{{ m.format }}</li>{% endif %}
-  {% if m.contact != blank %}<li><i class="fa-regular fa-envelope"></i><a href="mailto:{{ m.contact }}">{{ m.contact }}</a></li>{% endif %}
+  {% if location != '' %}<li><i class="fa-solid fa-location-dot"></i>{{ location }}</li>{% endif %}
+  {% if format != '' %}<li><i class="fa-solid fa-video"></i>{{ format }}</li>{% endif %}
+  {% if contact != '' %}<li><i class="fa-regular fa-envelope"></i><a href="mailto:{{ contact }}">{{ contact }}</a></li>{% endif %}
 </ul>
 {% endif %}
 
-{% if m.signup_url != blank or m.zoom_url != blank %}
+{% if zoom_url != '' or signup_url != '' %}
 
 <p class="jc-buttons">
-  {% if m.zoom_url != blank %}<a class="jc-btn" href="{{ m.zoom_url }}"><i class="fa-solid fa-video"></i>{{ m.zoom_label | default: "Join on Zoom" }}</a>{% endif %}
-  {% if m.signup_url != blank %}<a class="jc-btn" href="{{ m.signup_url }}">{{ m.signup_label | default: "Join the mailing list" }}</a>{% endif %}
+  {% if zoom_url != '' %}<a class="jc-btn" href="{{ zoom_url }}"><i class="fa-solid fa-video"></i>{{ m.zoom_label | default: 'Join on Zoom' }}</a>{% endif %}
+  {% if signup_url != '' %}<a class="jc-btn" href="{{ signup_url }}">{{ m.signup_label | default: 'Join the mailing list' }}</a>{% endif %}
 </p>
 {% endif %}
 
@@ -45,8 +53,16 @@ layout: default
 
 <div class="row jc-team">
 {% for person in jc.organizers %}
-  {% assign img_rel = 'assets/img/' | append: person.image %}
-  {% assign img_file = site.static_files | where_exp: 'f', 'f.path contains img_rel' | first %}
+  {% assign p_image = person.image | default: '' %}
+  {% assign p_url = person.url | default: '' %}
+  {% assign p_role = person.role | default: '' %}
+  {% assign p_affiliation = person.affiliation | default: '' %}
+  {% assign p_bio = person.bio | default: '' %}
+  {% assign img_rel = 'assets/img/' | append: p_image %}
+  {% assign img_file = nil %}
+  {% if p_image != '' %}
+    {% assign img_file = site.static_files | where_exp: 'f', 'f.path contains img_rel' | first %}
+  {% endif %}
   {% assign words = person.name | split: ' ' %}
   {% assign initials = '' %}
   {% for w in words limit: 2 %}{% assign first = w | slice: 0 %}{% assign initials = initials | append: first %}{% endfor %}
@@ -54,18 +70,18 @@ layout: default
     <div class="card h-100 jc-person">
       <div class="card-body text-center">
         <div class="jc-avatar">
-          {% if person.image != blank and img_file %}
+          {% if img_file %}
             {% include figure.liquid loading="eager" path=img_rel sizes="140px" alt=person.name %}
           {% else %}
             <div class="jc-initials" aria-hidden="true">{{ initials }}</div>
           {% endif %}
         </div>
         <h3 class="card-title">
-          {% if person.url != blank %}<a href="{{ person.url | relative_url }}">{{ person.name }}</a>{% else %}{{ person.name }}{% endif %}
+          {% if p_url != '' %}<a href="{{ p_url | relative_url }}">{{ person.name }}</a>{% else %}{{ person.name }}{% endif %}
         </h3>
-        {% if person.role != blank %}<div class="jc-role">{{ person.role }}</div>{% endif %}
-        {% if person.affiliation != blank %}<div class="jc-affil">{{ person.affiliation }}</div>{% endif %}
-        {% if person.bio != blank %}<div class="jc-bio">{{ person.bio | markdownify }}</div>{% endif %}
+        {% if p_role != '' %}<div class="jc-role">{{ p_role }}</div>{% endif %}
+        {% if p_affiliation != '' %}<div class="jc-affil">{{ p_affiliation }}</div>{% endif %}
+        {% if p_bio != '' %}<div class="jc-bio">{{ p_bio | markdownify }}</div>{% endif %}
       </div>
     </div>
   </div>
@@ -80,9 +96,9 @@ layout: default
 {% endfor %}
 {% endif %}
 
-{% if jc.archive_url != blank %}
+{% if archive_url != '' %}
 
-<p class="jc-archive"><a href="{{ jc.archive_url }}">{{ jc.archive_label | default: "Earlier sessions" }}</a></p>
+<p class="jc-archive"><a href="{{ archive_url }}">{{ jc.archive_label | default: 'Earlier sessions' }}</a></p>
 {% endif %}
 
 </div>
