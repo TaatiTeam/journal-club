@@ -28,11 +28,11 @@ meeting:
   # passcode here or use a link that embeds it (one with "?pwd=" in it).
   zoom_url: https://utoronto.zoom.us/j/86201342625
   zoom_label: Join on Zoom
-  # "Join the mailing list" button. There is no list service yet, so this
-  # opens an email to Kimia asking to be added. Swap in a Google Group or
-  # listserv sign-up link when there is one. A calendar file with the weekly
-  # slot and Zoom link is at assets/journal-club.ics for use in emails.
-  signup_url: "mailto:kimia.shaban@mail.utoronto.ca?subject=Journal%20club%20mailing%20list"
+  # "Join the mailing list" button. Hidden while blank. Put the Google Group
+  # (or listserv) join link here once it exists, e.g.
+  # https://groups.google.com/g/cv-journal-club. A calendar file with the
+  # weekly slot and Zoom link is at assets/journal-club.ics for emails.
+  signup_url: ""
   signup_label: Join the mailing list
 
 # Link shown under "Past sessions" for the older history.
