@@ -13,7 +13,7 @@ Everything on the page comes from one file: [`_data/journal_club.yml`](_data/jou
 1. Open `_data/journal_club.yml` on GitHub and click the pencil icon (Edit).
 2. Add an entry under `upcoming:` (soonest first). Copy the commented example in the file. Only `date` and `speaker` are required; leave any other field as `""` and it will not be shown.
 3. Commit directly to `main`. GitHub Pages rebuilds the site within a minute or two.
-4. After the session, move the entry from `upcoming:` to `past:` (most recent first). You can add `slides:` and `recording:` links there.
+4. After the session, move the entry from `upcoming:` to `past:` (most recent first).
 
 Dates are written as `YYYY-MM-DD` without quotes.
 

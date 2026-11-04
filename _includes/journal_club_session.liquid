@@ -36,18 +36,8 @@
     {% if s.location != blank %}
       <div class="jc-where"><i class="fa-solid fa-location-dot"></i>{{ s.location }}</div>
     {% endif %}
-    {% if s.paper != blank or s.slides != blank or s.recording != blank %}
-      <div class="jc-links">
-        {% if s.paper != blank -%}
-          <a href="{{ s.paper }}">Paper</a>
-        {%- endif %}
-        {% if s.slides != blank -%}
-          <a href="{{ s.slides }}">Slides</a>
-        {%- endif %}
-        {% if s.recording != blank -%}
-          <a href="{{ s.recording }}">Recording</a>
-        {%- endif %}
-      </div>
+    {% if s.paper != blank %}
+      <div class="jc-links"><a href="{{ s.paper }}">Paper</a></div>
     {% endif %}
   </div>
 </div>

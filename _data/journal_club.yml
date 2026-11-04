@@ -83,8 +83,8 @@ organizers:
 #     location: "" # e.g. the room, or "Zoom only"
 upcoming: []
 
-# Past sessions, most recent first. Same fields as `upcoming`, plus optional
-# `slides` and `recording` links. 2025 onward copied from Babak's archive.
+# Past sessions, most recent first. Same fields as `upcoming`. Entries from
+# 2025 onward were copied from the archive on Babak's site.
 past:
   - date: 2026-09-29
     time: "9:00 AM"
