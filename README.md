@@ -32,3 +32,34 @@ bundle install
 bundle exec jekyll serve
 # open http://localhost:4000/journal-club/
 ```
+
+## Weekly announcement email
+
+`tools/announce.py` opens a ready-to-send email in your mail app (Outlook, if it is the default) with everyone who signed up in BCC and the next session's details in the body. You check it and press Send.
+
+One-time setup on your laptop:
+
+1. Share the Google Sheet behind the sign-up form as "Anyone with the link can view". Copy its ID from the URL (`https://docs.google.com/spreadsheets/d/<ID>/edit`).
+2. Create `~/.journal-club.json` with `{"sheet_id": "<ID>", "from_note": "Kimia"}`. Keep this file off the repo.
+
+Then each week:
+
+```bash
+python3 tools/announce.py --dry-run   # preview
+python3 tools/announce.py             # open the draft
+```
+
+To have the draft open by itself every Monday at 9 am, save this as `~/Library/LaunchAgents/com.taatiteam.journal-club.plist` (fix the repo path), then run `launchctl load ~/Library/LaunchAgents/com.taatiteam.journal-club.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>com.taatiteam.journal-club</string>
+  <key>ProgramArguments</key><array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/kimiashaban/Desktop/GitHub/journal-club/tools/announce.py</string>
+  </array>
+  <key>StartCalendarInterval</key><dict><key>Weekday</key><integer>1</integer><key>Hour</key><integer>9</integer><key>Minute</key><integer>0</integer></dict>
+</dict></plist>
+```
