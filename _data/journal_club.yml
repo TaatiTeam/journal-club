@@ -9,7 +9,7 @@
 # Dates: write them as YYYY-MM-DD without quotes. Quote times ("1:00 PM").
 # -----------------------------------------------------------------------------
 
-name: Journal Club
+name: Computer Vision Journal Club
 tagline: >
   Paper discussions and guest talks on computer vision and machine learning,
   with a focus on human motion and health applications. Run by Dr. Babak
@@ -21,15 +21,18 @@ meeting:
   cadence: Tuesdays
   time: "1:00–2:00 PM ET"
   location: Vector Institute, Schwartz Reisman Innovation Campus, 108 College St, Toronto
-  format: "" # e.g. "In person, with Zoom for remote speakers"
+  format: "In person at Vector, with Zoom for remote attendees. The Zoom passcode is sent by email."
   contact: kimia.shaban@mail.utoronto.ca
-  # Zoom: paste the meeting link here and a "Join on Zoom" button appears.
-  # This page is public, so put a passcode or waiting room on the meeting,
-  # or leave this blank and send the link by email instead.
-  zoom_url: ""
+  # Zoom: the recurring meeting link (same ID every week). A "Join on Zoom"
+  # button appears when this is set. This page is public, so never put the
+  # passcode here or use a link that embeds it (one with "?pwd=" in it).
+  zoom_url: https://utoronto.zoom.us/j/86201342625
   zoom_label: Join on Zoom
-  signup_url: "" # mailing list or calendar link, if there is one
-  signup_label: Join the mailing list
+  # Second button. Currently the calendar file in assets/ (weekly Tuesday
+  # 1-2 PM event with the Zoom link, no passcode). Could also be a mailing
+  # list or sign-up form link.
+  signup_url: https://taatiteam.github.io/journal-club/assets/journal-club.ics
+  signup_label: Add to calendar
 
 # Link shown under "Past sessions" for the older history.
 archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
