@@ -102,7 +102,7 @@ def main():
     subject = f"Journal club {date}: {s.get('speaker', 'TBD')}"
     body = (
         f"Hi all,\n\nThis week's Computer Vision Journal Club:\n\n"
-        f"  {date}, 1:00–2:00 PM, Vector Institute\n"
+        f"  {date}, 1:00–2:00 PM, {s.get('location') or 'Vector Institute'}\n"
         f"  Speaker: {s.get('speaker', 'TBD')}\n"
         f"  Title: {title}\n"
         + (f"  Paper: {s['paper']}\n" if s.get("paper") else "")

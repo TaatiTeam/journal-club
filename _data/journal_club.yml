@@ -89,6 +89,7 @@ upcoming:
   - date: 2026-11-10
     speaker: Amirhosein Javadi
     title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
+    location: Minkowski Room (W1148), Vector Institute
     abstract: >
       ActDiff-VC is a generative video compression framework that pairs active
       sampling with conditional video diffusion. Rather than transmitting
