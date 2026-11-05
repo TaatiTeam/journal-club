@@ -1,10 +1,9 @@
 {% comment %}
-  Renders one journal club session from _data/journal_club.yml.
-  Usage: {% include journal_club_session.liquid session=s %}
-  Optional fields are normalized to "" first, because a missing field is
-  not equal to `blank` in the Liquid version GitHub Pages runs.
+  Session from _data/journal_club.yml. Upcoming sessions inherit meeting
+  logistics; archive entries show only their own recorded time and place.
 {% endcomment %}
 {% assign s = include.session %}
+{% assign s_date = s.date | default: '' %}
 {% assign s_time = s.time | default: '' %}
 {% assign s_speaker_url = s.speaker_url | default: '' %}
 {% assign s_affiliation = s.affiliation | default: '' %}
@@ -12,41 +11,91 @@
 {% assign s_paper = s.paper | default: '' %}
 {% assign s_abstract = s.abstract | default: '' %}
 {% assign s_location = s.location | default: '' %}
-<div class="jc-session">
+{% if include.mode == 'upcoming' %}
+  {% assign s_time = s.time | default: site.data.journal_club.meeting.time | default: '' %}
+  {% assign s_location = s.location | default: site.data.journal_club.meeting.location | default: '' %}
+{% endif %}
+<article class="jc-session{% if include.mode == 'upcoming' %} jc-session-upcoming{% else %} jc-session-past{% endif %}">
   <div class="jc-date">
-    {% if s.date %}{{ s.date | date: '%b %-d, %Y' }}{% else %}Date TBD{% endif %}
-    {% if s_time != '' %}
-      <div class="jc-time">{{ s_time }}</div>
+    {% if s_date != '' %}
+      <time datetime="{{ s.date | date: '%Y-%m-%d' }}">
+        {% if include.mode == 'upcoming' %}
+          <span class="jc-date-month">{{ s.date | date: '%b' }}</span>
+          <span class="jc-date-day">{{ s.date | date: '%d' }}</span>
+          <span class="jc-date-year">{{ s.date | date: '%Y' }}</span>
+        {% else %}
+          {{ s.date | date: '%b %-d' }}
+        {% endif %}
+      </time>
+    {% else %}
+      <span class="jc-date-tbd">Date to be announced</span>
     {% endif %}
+    {% if s_time != '' -%}
+      <span class="jc-time">{{ s_time | escape }}</span>
+    {%- endif %}
   </div>
-  <div class="jc-body">
-    <div class="jc-speaker">
-      {% if s_speaker_url != '' -%}
-        <a href="{{ s_speaker_url }}">{{ s.speaker }}</a>
-      {%- else -%}
-        {{- s.speaker -}}
-      {%- endif %}
-      {% if s_affiliation != '' -%}
-        <span class="jc-affil">, {{ s_affiliation }}</span>
-      {%- endif %}
-    </div>
-    {% if s_title != '' %}
-      <div class="jc-title">
-        {% if s_paper != '' -%}
-          <a href="{{ s_paper }}">{{ s_title }}</a>
+  <div class="jc-session-body">
+    {% if include.mode == 'upcoming' %}
+      <p class="jc-session-label">
+        {% if include.first -%}
+          <span class="session-dot" aria-hidden="true"></span>Next session
         {%- else -%}
-          {{- s_title -}}
+          Coming up
+        {%- endif -%}
+        {%- if s_date != '' -%}
+          <span class="jc-session-weekday"> / {{ s.date | date: '%A' }}</span>
         {%- endif %}
-      </div>
+      </p>
+    {% endif %}
+    <h3 class="jc-session-title">
+      {% if s_title != '' %}
+        {% if s_paper != '' -%}
+          <a href="{{ s_paper | escape }}">{{ s_title | escape }}</a>
+        {%- else -%}
+          {{- s_title | escape -}}
+        {%- endif %}
+      {% else %}
+        {% if s_speaker_url != '' -%}
+          <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
+        {%- else -%}
+          {{- s.speaker | escape -}}
+        {%- endif %}
+      {% endif %}
+    </h3>
+    {% if s_title != '' or s_affiliation != '' %}
+      <p class="jc-speaker">
+        {% if s_title != '' %}
+          {% if s_speaker_url != '' -%}
+            <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
+          {%- else -%}
+            {{- s.speaker | escape -}}
+          {%- endif %}
+        {% endif %}
+        {% if s_affiliation != '' -%}
+          <span class="jc-affil">
+            {%- if s_title != '' %} · {% endif -%}
+            {{- s_affiliation | escape -}}
+          </span>
+        {%- endif %}
+      </p>
     {% endif %}
     {% if s_abstract != '' %}
       <div class="jc-abstract">{{ s_abstract | markdownify }}</div>
     {% endif %}
-    {% if s_location != '' %}
-      <div class="jc-where"><i class="fa-solid fa-location-dot"></i>{{ s_location }}</div>
-    {% endif %}
-    {% if s_paper != '' %}
-      <div class="jc-links"><a href="{{ s_paper }}">Paper</a></div>
+    {% if s_location != '' or s_paper != '' %}
+      <div class="jc-session-footer">
+        {% if s_location != '' %}
+          <p class="jc-where">{{ s_location | escape }}</p>
+        {% endif %}
+        {% if s_paper != '' -%}
+          <a
+            class="jc-paper-link"
+            href="{{ s_paper | escape }}"
+            aria-label="Read paper: {{ s_title | default: s.speaker | escape }}"
+            >Read paper <span aria-hidden="true">↗</span></a
+          >
+        {%- endif %}
+      </div>
     {% endif %}
   </div>
-</div>
+</article>

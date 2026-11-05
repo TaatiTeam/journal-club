@@ -111,6 +111,25 @@ def ics_fold(line):
     return b"\r\n".join(out)
 
 
+def session_time(s):
+    """Display time and 24h start/end for a session. Uses the session's own
+    `time` if set (e.g. "12:00–1:00 PM ET (this week only)"), else 1:00–2:00 PM."""
+    label = (s.get("time") or "").strip() or "1:00–2:00 PM ET"
+    m = re.search(r"(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?\s*[–-]\s*(\d{1,2})(?::(\d{2}))?\s*(AM|PM)?", label, re.I)
+    start, end = "13:00:00", "14:00:00"
+    if m:
+        h1, m1, ap1, h2, m2, ap2 = m.groups()
+        ap2 = (ap2 or ap1 or "PM").upper(); ap1 = (ap1 or ap2).upper()
+        def to24(h, mm, ap):
+            h = int(h) % 12 + (12 if ap == "PM" else 0)
+            return f"{h:02d}:{mm or '00'}:00"
+        # "12:00–1:00 PM": the start has no AM/PM of its own; 12 before 1 PM is noon.
+        if not m.group(3) and int(h1) == 12 and ap2 == "PM":
+            ap1 = "PM"
+        start, end = to24(h1, m1, ap1), to24(h2, m2, ap2)
+    return label, start, end
+
+
 def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry):
     """Open Outlook on the web with a new meeting form filled in: attendees,
     title, time, room, and an HTML body (club, Zoom, speaker, abstract).
@@ -131,7 +150,8 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     summary = f"Journal Club, {datetime.date.fromisoformat(s['date']).strftime('%b %-d')}: {speaker}"
     passcode = cfg.get("zoom_passcode", "")
     h = html.escape
-    paras = [f"<b>Computer Vision Journal Club</b><br>{h(date)}, 1:00–2:00 PM<br>{h(where)}" + (", or on Zoom" if ZOOM_URL else "")]
+    tlabel, tstart, tend = session_time(s)
+    paras = [f"<b>Computer Vision Journal Club</b><br>{h(date)}, {h(tlabel)}<br>{h(where)}" + (", or on Zoom" if ZOOM_URL else "")]
     if ZOOM_URL:
         paras.append(f'<b>Join on Zoom:</b> <a href="{ZOOM_URL}">{ZOOM_URL}</a>' + (f"<br>Passcode: {h(passcode)}" if passcode else ""))
     sp = f"<b>Speaker:</b> {h(speaker)}" + (f"<br><b>Title:</b> {h(title)}" if title else "")
@@ -143,7 +163,7 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
         paras += [h(p.strip()) for p in abstract.split("\n\n") if p.strip()]
     paras.append(f'Schedule and past sessions: <a href="{PAGE_URL}">{PAGE_URL}</a>')
     body = "".join(f"<p>{p}</p>" for p in paras)
-    params = {"subject": summary, "startdt": f"{s['date']}T13:00:00", "enddt": f"{s['date']}T14:00:00",
+    params = {"subject": summary, "startdt": f"{s['date']}T{tstart}", "enddt": f"{s['date']}T{tend}",
               "location": where, "body": body, "to": ",".join(required), "cc": ",".join(optional), "allday": "false"}
     url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
     subprocess.run(["pbcopy"], input="; ".join(optional).encode(), check=True)
@@ -185,9 +205,10 @@ def main():
     passcode = cfg.get("zoom_passcode", "")
     zoom_line = (f"Zoom: {zoom}" + (f" (passcode {passcode})" if passcode else "")) if zoom else ""
     abstract = (s.get("abstract_full") or s.get("abstract") or "").strip()
+    tlabel = session_time(s)[0]
     body = f"Hi everyone,\n\nPlease join us next week for the Computer Vision Journal Club. {speaker} will be presenting"
     body += f' "{title}".\n\n' if title else ".\n\n"
-    body += f"When: {date}, 1:00–2:00 PM\nWhere: {where}"
+    body += f"When: {date}, {tlabel}\nWhere: {where}"
     body += ", or on Zoom\n" if zoom else "\n"
     if zoom_line:
         body += zoom_line + "\n"
@@ -210,12 +231,12 @@ def main():
             if len(digits) == 11:
                 mid = f"{digits[:3]} {digits[3:7]} {digits[7:]}"
         msg = f":loudspeaker: Upcoming Talk: {title or speaker}\n\n"
-        msg += f"Hi everyone, on {date}, 1:00–2:00 PM ET, {speaker} will present"
+        msg += f"Hi everyone, on {date}, {tlabel}, {speaker} will present"
         msg += f' "{title}".\n\n' if title else ".\n\n"
         if abstract:
             msg += "Abstract: " + " ".join(p.strip() for p in abstract.split("\n\n") if p.strip()) + "\n\n"
         msg += "Join in person or on Zoom.\n\n"
-        msg += f":date: {date}, 1:00–2:00 PM ET\n:round_pushpin: {where}\n"
+        msg += f":date: {date}, {tlabel}\n:round_pushpin: {where}\n"
         if zoom:
             msg += f":computer: Zoom: {zoom}\n" + (f"Meeting ID: {mid}\n" if mid else "") + (f"Passcode: {passcode}\n" if passcode else "")
         msg += f":calendar: Schedule and past talks: {PAGE_URL}\n"

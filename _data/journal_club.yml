@@ -10,11 +10,13 @@
 # -----------------------------------------------------------------------------
 
 name: Computer Vision Journal Club
+# Markdown links work here, e.g. [text](https://...).
 tagline: >
   Paper discussions and guest talks on computer vision and machine learning,
-  with a focus on human motion and health applications. Run by Dr. Babak
-  Taati's group at the University of Toronto, KITE, and the Vector Institute
-  since 2019.
+  with a focus on human motion and health applications. Hosted at the
+  University of Toronto, KITE, and the Vector Institute
+  [since 2019](https://www.cs.toronto.edu/~taati/journalclub.html).
+  Open to anyone interested, from any lab.
 
 # Optional picture shown top right of the page. Blank hides it. To use one,
 # put the file in assets/img/journal_club/ and set e.g.
@@ -47,6 +49,9 @@ meeting:
   signup_label: Join the mailing list
   # Short line shown under the buttons. Blank hides it.
   signup_note: "Weekly email with the next speaker, Zoom link and passcode."
+  # Slack channel, shown with the meeting details. Blank hides it.
+  slack_channel: "#computervision-journalclub"
+  slack_note: "on the Vector Institute Slack"
 
 # Link shown under "Past sessions" for the older history.
 archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
@@ -59,29 +64,18 @@ organizers:
     affiliation: PhD student, Computer Science, University of Toronto · Vector Institute · KITE
     image: journal_club/kimia.jpg
     url: https://kimiashaban.github.io/
-    bio: >
-      Runs the journal club: sets the schedule, invites speakers, and keeps
-      this page up to date. Works on computer vision and vision-language
-      models.
 
   - name: Babak Taati
     role: Faculty lead
     affiliation: Senior Scientist, KITE Research Institute, UHN · Associate Professor, Computer Science, University of Toronto · Faculty Affiliate, Vector Institute
     image: journal_club/babak.jpg
     url: https://www.cs.toronto.edu/~taati/
-    bio: >
-      Holds the Barbara G. Stymiest Chair in Rehabilitation Technology
-      Research and leads the KITE Aging Team. Hosts the journal club and
-      keeps the long-term archive.
 
   - name: Vida Adeli
     role: Former organizer
     affiliation: PhD candidate, Computer Science, University of Toronto · Vector Institute · KITE
     image: journal_club/vida.jpg
     url: https://vadeli.github.io/
-    bio: >
-      Works on generative models for 3D human motion, animation, and clinical
-      gait analysis. Organized the journal club before Kimia.
 
 # Upcoming sessions, soonest first. Move an entry to `past` after it happens.
 # Only `date` and `speaker` are needed; blank fields are hidden.
@@ -101,6 +95,7 @@ upcoming:
     speaker: Amirhosein Javadi
     title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
     location: Minkowski Room (W1148), Vector Institute
+    time: "12:00–1:00 PM ET (this week only)"
     abstract: >
       ActDiff-VC is a generative video compression framework that pairs active
       sampling with conditional video diffusion. Rather than transmitting

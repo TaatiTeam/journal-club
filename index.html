@@ -1,8 +1,6 @@
 ---
 layout: default
 ---
-
-
 {% assign jc = site.data.journal_club %}
 {% assign m = jc.meeting %}
 {% assign cadence = m.cadence | default: '' %}
@@ -13,108 +11,275 @@ layout: default
 {% assign zoom_url = m.zoom_url | default: '' %}
 {% assign signup_url = m.signup_url | default: '' %}
 {% assign signup_note = m.signup_note | default: '' %}
+{% assign slack_channel = m.slack_channel | default: '' %}
+{% assign slack_note = m.slack_note | default: '' %}
 {% assign archive_url = jc.archive_url | default: '' %}
 {% assign header_image = jc.header_image | default: '' %}
-{% assign header_rel = 'assets/img/' | append: header_image %}
-{% assign header_file = nil %}
+{% assign header_rel = '/assets/img/' | append: header_image %}
+{% assign header_file = null %}
 {% if header_image != '' %}
-{% assign header_file = site.static_files | where_exp: 'f', 'f.path contains header_rel' | first %}
+  {% assign header_file = site.static_files | where: 'path', header_rel | first %}
 {% endif %}
 
 <div class="journal-club">
-
-{% if header_file %}
-
-<div class="jc-header-image">
-  {% include figure.liquid loading="eager" path=header_rel sizes="260px" alt=jc.header_image_alt %}
-  {% if jc.header_image_credit %}<div class="jc-credit">{{ jc.header_image_credit }}</div>{% endif %}
-</div>
-{% endif %}
-
-<p class="jc-tagline">{{ jc.tagline }}</p>
-
-{% if cadence != '' or mtime != '' or location != '' or format != '' or contact != '' %}
-
-<ul class="jc-meta list-unstyled">
-  {% if cadence != '' or mtime != '' %}
-    <li><i class="fa-regular fa-clock"></i>{{ cadence }}{% if cadence != '' and mtime != '' %}, {% endif %}{{ mtime }}</li>
-  {% endif %}
-  {% if location != '' %}<li><i class="fa-solid fa-location-dot"></i>{{ location }}</li>{% endif %}
-  {% if format != '' %}<li><i class="fa-solid fa-video"></i>{{ format }}</li>{% endif %}
-  {% if contact != '' %}<li><i class="fa-regular fa-envelope"></i><a href="mailto:{{ contact }}">{{ contact }}</a></li>{% endif %}
-</ul>
-{% endif %}
-
-{% if zoom_url != '' or signup_url != '' %}
-
-<p class="jc-buttons">
-  {% if zoom_url != '' %}<a class="jc-btn" href="{{ zoom_url }}"><i class="fa-solid fa-video"></i>{{ m.zoom_label | default: 'Join on Zoom' }}</a>{% endif %}
-  {% if signup_url != '' %}<a class="jc-btn" href="{{ signup_url }}">{{ m.signup_label | default: 'Join the mailing list' }}</a>{% endif %}
-</p>
-{% if signup_note != '' %}<p class="jc-note">{{ signup_note }}</p>{% endif %}
-{% endif %}
-
-<h2 id="upcoming">Upcoming speakers</h2>
-
-{% if jc.upcoming and jc.upcoming.size > 0 %}
-{% for s in jc.upcoming %}
-{% include journal_club_session.liquid session=s %}
-{% endfor %}
-{% else %}
-
-  <p class="jc-empty">The next sessions will be announced here.</p>
-{% endif %}
-
-<h2 id="team">Organizing team</h2>
-
-<div class="row jc-team">
-{% for person in jc.organizers %}
-  {% assign p_image = person.image | default: '' %}
-  {% assign p_url = person.url | default: '' %}
-  {% assign p_role = person.role | default: '' %}
-  {% assign p_affiliation = person.affiliation | default: '' %}
-  {% assign p_bio = person.bio | default: '' %}
-  {% assign img_rel = 'assets/img/' | append: p_image %}
-  {% assign img_file = nil %}
-  {% if p_image != '' %}
-    {% assign img_file = site.static_files | where_exp: 'f', 'f.path contains img_rel' | first %}
-  {% endif %}
-  {% assign words = person.name | split: ' ' %}
-  {% assign initials = '' %}
-  {% for w in words limit: 2 %}{% assign first = w | slice: 0 %}{% assign initials = initials | append: first %}{% endfor %}
-  <div class="col-sm-6 col-md-4 mb-4">
-    <div class="card h-100 jc-person">
-      <div class="card-body text-center">
-        <div class="jc-avatar">
-          {% if img_file %}
-            {% include figure.liquid loading="eager" path=img_rel sizes="140px" alt=person.name %}
-          {% else %}
-            <div class="jc-initials" aria-hidden="true">{{ initials }}</div>
+  <section class="jc-intro" aria-labelledby="club-title">
+    <div class="jc-intro-heading">
+      <p class="eyebrow"><span class="small-cross" aria-hidden="true">✳</span> A space for shared curiosity</p>
+      <h1 id="club-title">
+        {% if jc.name contains 'Journal Club' %}
+          {{ jc.name | remove: 'Journal Club' | strip | escape }}
+          <em>Journal Club<span class="title-period">.</span></em>
+        {% else %}
+          {{ jc.name | default: site.title | escape }}
+        {% endif %}
+      </h1>
+    </div>
+    <div class="jc-intro-copy">
+      <p class="jc-tagline">{{ jc.tagline | markdownify | remove: '<p>' | remove: '</p>' | strip }}</p>
+      {% if zoom_url != '' or signup_url != '' %}
+        <div class="jc-buttons">
+          {% if signup_url != '' %}
+            <a class="jc-btn jc-btn-primary" href="{{ signup_url | escape }}">
+              {{- m.signup_label | default: 'Join the mailing list' | escape }}
+              <span aria-hidden="true">↗</span></a
+            >
+          {% endif %}
+          {% if zoom_url != '' %}
+            <a class="jc-btn jc-btn-secondary" href="{{ zoom_url | escape }}">
+              {{- m.zoom_label | default: 'Join on Zoom' | escape }}
+              <span aria-hidden="true">↗</span></a
+            >
           {% endif %}
         </div>
-        <h3 class="card-title">
-          {% if p_url != '' %}<a href="{{ p_url | relative_url }}">{{ person.name }}</a>{% else %}{{ person.name }}{% endif %}
-        </h3>
-        {% if p_role != '' %}<div class="jc-role">{{ p_role }}</div>{% endif %}
-        {% if p_affiliation != '' %}<div class="jc-affil">{{ p_affiliation }}</div>{% endif %}
-        {% if p_bio != '' %}<div class="jc-bio">{{ p_bio | markdownify }}</div>{% endif %}
-      </div>
+        {% if signup_url != '' and signup_note != '' %}
+          <p class="jc-note">{{ signup_note | escape }}</p>
+        {% endif %}
+      {% endif %}
     </div>
-  </div>
-{% endfor %}
-</div>
+    {% if header_file %}
+      <figure class="jc-header-image">
+        <img
+          src="{{ header_rel | relative_url }}"
+          alt="{{ jc.header_image_alt | escape }}"
+          loading="eager"
+        >
+        {% if jc.header_image_credit %}
+          <figcaption>{{ jc.header_image_credit | escape }}</figcaption>
+        {% endif %}
+      </figure>
+    {% endif %}
+  </section>
 
-{% if jc.past and jc.past.size > 0 %}
+  {% if cadence != '' or mtime != '' or location != '' or format != '' or slack_channel != '' %}
+    <dl class="jc-meeting" aria-label="Meeting details">
+      {% if cadence != '' or mtime != '' %}
+        <div>
+          <dt>When we meet</dt>
+          <dd>
+            {{ cadence | escape -}}
+            {%- if cadence != '' and mtime != '' -%}
+              <span
+                class="detail-separator"
+                aria-hidden="true"
+              >
+                /
+              </span>
+            {%- endif -%}
+            {{- mtime | escape }}
+          </dd>
+        </div>
+      {% endif %}
+      {% if location != '' %}
+        <div>
+          <dt>Where to find us</dt>
+          <dd>{{ location | escape }}</dd>
+        </div>
+      {% endif %}
+      {% if format != '' %}
+        <div>
+          <dt>How to join</dt>
+          <dd>{{ format | escape }}</dd>
+        </div>
+      {% endif %}
+      {% if slack_channel != '' %}
+        <div>
+          <dt>Slack</dt>
+          <dd>{{ slack_channel | escape }}{% if slack_note != '' %} {{ slack_note | escape }}{% endif %}</dd>
+        </div>
+      {% endif %}
+    </dl>
+  {% endif %}
 
-<h2 id="past">Past sessions</h2>
-{% for s in jc.past %}
-  {% include journal_club_session.liquid session=s %}
-{% endfor %}
-{% endif %}
+  <section
+    class="jc-section jc-upcoming"
+    id="upcoming"
+    aria-labelledby="upcoming-title"
+  >
+    <div class="section-heading">
+      <div>
+        <span class="section-number" aria-hidden="true">01 /</span>
+        <h2 id="upcoming-title">On the calendar</h2>
+      </div>
+      <span class="section-caption">Upcoming conversations</span>
+    </div>
+    {% if jc.upcoming and jc.upcoming.size > 0 %}
+      <div class="jc-upcoming-list">
+        {% for s in jc.upcoming %}
+          {%
+            include journal_club_session.liquid
+            session=s mode='upcoming' first=forloop.first
+          %}
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="jc-empty">
+        <h3>A new conversation is on its way.</h3>
+        <p>
+          The next sessions will be announced here.
+          {%- if signup_url != '' %}
+            <a href="{{ signup_url | escape }}">Join the mailing list to hear first <span aria-hidden="true">↗</span></a>
+          {%- endif %}
+        </p>
+      </div>
+    {% endif %}
+    <a
+      class="jc-calendar-link"
+      href="{{ '/assets/journal-club.ics' | relative_url }}"
+      download
+      >Add the weekly meeting to your calendar <span aria-hidden="true">↗</span></a
+    >
+  </section>
 
-{% if archive_url != '' %}
-
-<p class="jc-archive"><a href="{{ archive_url }}">{{ jc.archive_label | default: 'Earlier sessions' }}</a></p>
-{% endif %}
-
+  {% if jc.organizers and jc.organizers.size > 0 %}
+    <section class="jc-section" id="team" aria-labelledby="team-title">
+      <div class="section-heading">
+        <div>
+          <span class="section-number" aria-hidden="true">02 /</span>
+          <h2 id="team-title">The people behind it</h2>
+        </div>
+        <span class="section-caption">Organizing team</span>
+      </div>
+      <div class="jc-team">
+        {% for person in jc.organizers %}
+          {% assign p_image = person.image | default: '' %}
+          {% assign p_url = person.url | default: '' %}
+          {% assign p_role = person.role | default: '' %}
+          {% assign p_affiliation = person.affiliation | default: '' %}
+          {% assign p_bio = person.bio | default: '' %}
+          {% assign img_rel = '/assets/img/' | append: p_image %}
+          {% assign img_file = null %}
+          {% if p_image != '' -%}
+            {%- assign img_file = site.static_files | where: 'path', img_rel | first -%}
+          {%- endif %}
+          {% assign words = person.name | split: ' ' %}
+          {% assign initials = '' %}
+          {% for w in words limit: 2 -%}
+            {%- assign first = w | slice: 0 -%}
+            {%- assign initials = initials | append: first -%}
+          {%- endfor %}
+          <article class="jc-person">
+            <div class="jc-person-heading">
+              <div class="jc-avatar">
+                {% if img_file %}
+                  <img
+                    src="{{ img_rel | relative_url }}"
+                    alt="{{ person.name | escape }}"
+                    loading="lazy"
+                    width="80"
+                    height="88"
+                  >
+                {% else %}
+                  <span class="jc-initials" aria-hidden="true">{{ initials | escape }}</span>
+                {% endif %}
+              </div>
+              <div>
+                {% if p_role != '' %}
+                  <p class="jc-role">{{ p_role | escape }}</p>
+                {% endif %}
+                <h3>
+                  {% if p_url != '' -%}
+                    <a href="{{ p_url | relative_url | escape }}">
+                      {{- person.name | escape }}
+                      <span aria-hidden="true">↗</span></a
+                    >
+                  {%- else -%}
+                    {{- person.name | escape -}}
+                  {%- endif %}
+                </h3>
+              </div>
+            </div>
+            {% if p_affiliation != '' %}
+              <p class="jc-affil">{{ p_affiliation | escape }}</p>
+            {% endif %}
+            {% if p_bio != '' %}
+              <div class="jc-bio">{{ p_bio | markdownify }}</div>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+      {% if contact != '' %}
+        <p class="jc-contact">
+          Have a paper in mind, or interested in speaking?
+          <a href="mailto:{{ contact | escape }}">Get in touch <span aria-hidden="true">↗</span></a>
+        </p>
+      {% endif %}
+    </section>
+  {% endif %}
+  {% if jc.past and jc.past.size > 0 %}
+    <section class="jc-section jc-past" id="past" aria-labelledby="past-title">
+      <div class="section-heading">
+        <div>
+          <span class="section-number" aria-hidden="true">
+            {%- if jc.organizers.size > 0 %}03{% else %}02{% endif %} /</span
+          >
+          <h2 id="past-title">Previously, at journal club</h2>
+        </div>
+        <span class="section-caption">The conversation so far</span>
+      </div>
+      {% assign past_years = jc.past | group_by_exp: 'session', 'session.date | date: "%Y"' %}
+      {% for year in past_years %}
+        <details
+          class="jc-year"
+          {% if forloop.first %}
+            open
+          {% endif %}
+        >
+          <summary>
+            <span class="jc-year-label">{{ year.name }}</span
+            ><span class="jc-year-count">
+              {{- year.items.size }}
+              {% if year.items.size == 1 -%}
+                session
+              {%- else -%}
+                sessions
+              {%- endif -%}</span
+            ><span class="jc-year-toggle" aria-hidden="true"></span>
+          </summary>
+          <div class="jc-year-sessions">
+            {% for s in year.items -%}
+              {%-
+                include journal_club_session.liquid
+                session=s mode='past'
+              -%}
+            {%- endfor %}
+          </div>
+        </details>
+      {% endfor %}
+      {% if archive_url != '' %}
+        <p class="jc-archive">
+          <a href="{{ archive_url | escape }}">
+            {{- jc.archive_label | default: 'Explore earlier sessions' | escape }}
+            <span aria-hidden="true">↗</span></a
+          >
+        </p>
+      {% endif %}
+    </section>
+  {% elsif archive_url != '' %}
+    <p class="jc-archive">
+      <a href="{{ archive_url | escape }}">
+        {{- jc.archive_label | default: 'Explore earlier sessions' | escape }}
+        <span aria-hidden="true">↗</span></a
+      >
+    </p>
+  {% endif %}
 </div>

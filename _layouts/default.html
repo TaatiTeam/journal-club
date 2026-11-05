@@ -3,21 +3,50 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ site.data.journal_club.name | default: site.title }}</title>
-    <meta name="description" content="{{ site.description }}">
-    <meta property="og:title" content="{{ site.data.journal_club.name | default: site.title }}">
-    <meta property="og:description" content="{{ site.description }}">
+    <meta name="color-scheme" content="light dark">
+    <title>
+      {{ site.data.journal_club.name | default: site.title | escape }}
+    </title>
+    <meta name="description" content="{{ site.description | escape }}">
+    <meta
+      property="og:title"
+      content="{{ site.data.journal_club.name | default: site.title | escape }}"
+    >
+    <meta property="og:description" content="{{ site.description | escape }}">
     <meta property="og:url" content="{{ site.url }}{{ site.baseurl }}/">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    <link rel="canonical" href="{{ '/' | absolute_url }}">
+    <link
+      rel="stylesheet"
+      href="{{ '/assets/css/style.css' | relative_url }}"
+    >
   </head>
   <body>
-    <main class="wrap">
-      <h1>{{ site.data.journal_club.name | default: site.title }}</h1>
-      {{ content }}
-    </main>
-    <footer class="wrap site-footer">
-      <p>Maintained by the organizing team. To add or change a session, edit <a href="https://github.com/TaatiTeam/journal-club/blob/main/_data/journal_club.yml">_data/journal_club.yml</a>.</p>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a
+        class="site-brand"
+        href="{{ '/' | relative_url }}"
+        aria-label="Journal club home"
+      >
+        <span class="brand-mark" aria-hidden="true">cv<span>.</span></span>
+        <span>Taati Group<span class="brand-caption">University of Toronto · KITE · Vector</span></span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#upcoming">Schedule</a>
+        <a href="#team">People</a>
+        {% if site.data.journal_club.past.size > 0 -%}
+          <a href="#past">Archive <span aria-hidden="true">↗</span></a>
+        {%- endif %}
+      </nav>
+    </header>
+    <main id="main" class="wrap" tabindex="-1">{{ content }}</main>
+    <footer class="site-footer wrap">
+      <a class="footer-brand" href="{{ '/' | relative_url }}">Computer vision. Shared perspectives.</a>
+      <p>Organized by the Taati Group <span aria-hidden="true">/</span> Since 2019</p>
+      <a
+        href="https://github.com/TaatiTeam/journal-club"
+        >View on GitHub <span aria-hidden="true">↗</span></a
+      >
     </footer>
   </body>
 </html>
