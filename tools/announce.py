@@ -20,6 +20,7 @@ Run:  python3 tools/announce.py             (opens a draft for the next session)
       python3 tools/announce.py --dry-run   (prints what it would send)
       python3 tools/announce.py --invite    (opens a filled-in meeting form in
                                              Outlook on the web; you press Send)
+      python3 tools/announce.py --slack     (prints the Slack post and copies it)
       python3 tools/announce.py --attendees (copies every address to the
                                              clipboard, for a hand-made invite)
 """
@@ -201,6 +202,25 @@ def main():
     )
     if "--invite" in sys.argv:
         write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry)
+        return
+    if "--slack" in sys.argv:
+        mid = ""
+        if zoom:
+            digits = re.sub(r"\D", "", zoom.rsplit("/", 1)[-1])
+            if len(digits) == 11:
+                mid = f"{digits[:3]} {digits[3:7]} {digits[7:]}"
+        msg = f":loudspeaker: Upcoming Talk: {title or speaker}\n\n"
+        msg += f"Hi everyone, on {date}, 1:00–2:00 PM ET, {speaker} will present"
+        msg += f' "{title}".\n\n' if title else ".\n\n"
+        if abstract:
+            msg += "Abstract: " + " ".join(p.strip() for p in abstract.split("\n\n") if p.strip()) + "\n\n"
+        msg += "Join in person or on Zoom.\n\n"
+        msg += f":date: {date}, 1:00–2:00 PM ET\n:round_pushpin: {where}\n"
+        if zoom:
+            msg += f":computer: Zoom: {zoom}\n" + (f"Meeting ID: {mid}\n" if mid else "") + (f"Passcode: {passcode}\n" if passcode else "")
+        msg += f":calendar: Schedule and past talks: {PAGE_URL}\n"
+        subprocess.run(["pbcopy"], input=msg.encode(), check=True)
+        print(msg); print("(copied to clipboard; paste into Slack)")
         return
     if dry:
         print(f"TO: {', '.join(to)}\nCC: {', '.join(cc)}\nBCC ({len(emails)}): {', '.join(emails)}\n\nSubject: {subject}\n\n{body}")
