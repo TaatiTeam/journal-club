@@ -9,10 +9,11 @@ Setup (once):
   2. Save a config file at ~/.journal-club.json:
        {"sheet_id": "<ID>", "from_note": "Kimia",
         "to": ["kimia@example.org"], "cc": ["babak@example.org"],
-        "recipients": ["someone@example.org"]}
-     to / cc: who goes in the To and Cc fields. Everyone else (recipients
-     listed by hand plus everyone who signed up through the form) goes in
-     Bcc, so members never see each other's addresses.
+        "speakers": {"2026-11-10": "speaker@example.org"}}
+     to / cc: who goes in the To and Cc fields of the email, and (cc) who is
+     a required attendee on calendar invites. Everyone on the sheet goes in
+     Bcc / optional. speakers: per-date speaker address, made a required
+     attendee on that session's invite. Keep this file off the repo.
      Keep this file on your laptop only; it is not in the repo.
 
 Run:  python3 tools/announce.py             (opens a draft for the next session)
@@ -118,8 +119,11 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     # Required: the `cc` list from the config (Babak) plus the speaker if the
     # session has `speaker_email`. Optional: everyone else on the list.
     required = [e for e in cc if e != organizer]
-    if s.get("speaker_email") and s["speaker_email"].lower() not in required:
-        required.append(s["speaker_email"].lower())
+    # Speaker addresses live in the local config, never in the public repo:
+    #   "speakers": {"2026-11-10": "someone@example.org"}
+    sp = (cfg.get("speakers") or {}).get(s["date"], "").strip().lower()
+    if sp and sp not in required:
+        required.append(sp)
     optional = [e for e in emails if e != organizer and e not in required]
     attendees = required + optional
     date = datetime.date.fromisoformat(s["date"]).strftime("%A, %B %-d")
