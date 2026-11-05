@@ -88,8 +88,16 @@ organizers:
 upcoming:
   - date: 2026-11-10
     speaker: Amirhosein Javadi
-    title: "" # TBD
-    abstract: "" # TBD
+    title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
+    abstract: >
+      ActDiff-VC is a generative video compression framework that pairs active
+      sampling with conditional video diffusion. Rather than transmitting
+      information for every frame, it adaptively selects keyframes from scene
+      dynamics and represents motion with a compact set of point trajectories,
+      and a conditional diffusion decoder reconstructs the video from these
+      sparse signals. On standard benchmarks it reaches up to 64.6% bitrate
+      reduction at comparable perceptual quality relative to strong learned
+      codecs.
 
 # Past sessions, most recent first. Same fields as `upcoming`. Entries from
 # 2025 onward were copied from the archive on Babak's site.
