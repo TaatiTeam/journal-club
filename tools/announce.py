@@ -111,34 +111,38 @@ def ics_fold(line):
 
 def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry):
     """Open Outlook on the web with a new meeting form filled in: attendees,
-    title, time, room, Zoom link and abstract. Nothing is sent until you press
-    Send in the browser."""
+    title, time, room, and an HTML body (club, Zoom, speaker, abstract).
+    Nothing is sent until you press Send in the browser."""
+    import html
     organizer = (to or [""])[0]
     attendees = [e for e in cc + emails if e != organizer]
-    summary = f"Journal Club: {speaker}" + (f' on "{title}"' if title else "")
-    desc = (f"{speaker}" + (f': "{title}"' if title else "") + "\n\n"
-            + (zoom_line + "\n\n" if zoom_line else "")
-            + (abstract + "\n\n" if abstract else "")
-            + f"Schedule: {PAGE_URL}")
-    location = where + (f"; Zoom: {ZOOM_URL}" if ZOOM_URL else "")
-    params = {
-        "subject": summary,
-        "startdt": f"{s['date']}T13:00:00",
-        "enddt": f"{s['date']}T14:00:00",
-        "location": location,
-        "body": desc,
-        "to": ",".join(attendees),
-        "allday": "false",
-    }
+    date = datetime.date.fromisoformat(s["date"]).strftime("%A, %B %-d")
+    summary = f"Journal Club, {datetime.date.fromisoformat(s['date']).strftime('%b %-d')}: {speaker}"
+    passcode = cfg.get("zoom_passcode", "")
+    h = html.escape
+    paras = [f"<b>Computer Vision Journal Club</b><br>{h(date)}, 1:00–2:00 PM<br>{h(where)}" + (", or on Zoom" if ZOOM_URL else "")]
+    if ZOOM_URL:
+        paras.append(f'<b>Join on Zoom:</b> <a href="{ZOOM_URL}">{ZOOM_URL}</a>' + (f"<br>Passcode: {h(passcode)}" if passcode else ""))
+    sp = f"<b>Speaker:</b> {h(speaker)}" + (f"<br><b>Title:</b> {h(title)}" if title else "")
+    if s.get("paper"):
+        sp += f'<br><b>Paper:</b> <a href="{s["paper"]}">{s["paper"]}</a>'
+    paras.append(sp)
+    if abstract:
+        paras.append("<b>Abstract</b>")
+        paras += [h(p.strip()) for p in abstract.split("\n\n") if p.strip()]
+    paras.append(f'Schedule and past sessions: <a href="{PAGE_URL}">{PAGE_URL}</a>')
+    body = "".join(f"<p>{p}</p>" for p in paras)
+    params = {"subject": summary, "startdt": f"{s['date']}T13:00:00", "enddt": f"{s['date']}T14:00:00",
+              "location": where, "body": body, "to": ",".join(attendees), "allday": "false"}
     url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
     subprocess.run(["pbcopy"], input="; ".join(attendees).encode(), check=True)
-    print(f"Meeting form for {s['date']}: {len(attendees)} attendees, title, room, Zoom and abstract filled in.")
-    print("The attendee list is also on your clipboard in case the form drops it.")
+    print(f"Meeting form for {date}: {len(attendees)} attendees, title, room, Zoom and abstract filled in.")
+    print("Attendee list is also on your clipboard in case the form drops it.")
     if dry:
-        print(f"\nWould open ({len(url)} chars): {url[:120]}...\n\nTitle: {summary}\nLocation: {location}\n\n{desc}")
+        print(f"\nSubject: {summary}\nLocation: {where}\n\n" + body.replace("</p>", "\n\n").replace("<br>", "\n"))
         return
     subprocess.run(["open", url], check=True)
-    print("Opened in your browser. Check it, switch off the Teams toggle if it is on, then press Send.")
+    print("Opened in your browser. Check it, make sure no Teams link was added, then press Send.")
 
 
 def main():
