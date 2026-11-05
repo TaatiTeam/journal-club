@@ -57,8 +57,19 @@ def emails_from_sheet(sheet_id):
 
 
 def next_session():
-    """Minimal parse of the `upcoming:` list without needing PyYAML."""
+    """First entry of `upcoming:` in the schedule YAML."""
     text = fetch(DATA_URL)
+    try:
+        import yaml  # PyYAML, present on most Python installs
+        data = yaml.safe_load(text)
+        up = data.get("upcoming") or []
+        if not up:
+            return None
+        e = {k: (v.isoformat() if hasattr(v, "isoformat") else ("" if v is None else str(v).strip())) for k, v in up[0].items()}
+        return e
+    except ImportError:
+        pass
+    # Fallback: minimal parse of simple one-line fields.
     m = re.search(r"^upcoming:\s*\n((?:  .*\n|\s*\n)*?)(?=^\S|\Z)", text, re.M)
     if not m or not m.group(1).strip():
         return None
