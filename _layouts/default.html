@@ -61,7 +61,7 @@
         var h = document.documentElement;
         if (!h.classList.contains("embed") || window.parent === window) return;
         var send = function () {
-          parent.postMessage({ journalClubHeight: h.scrollHeight }, "*");
+          parent.postMessage({ journalClubHeight: document.body.offsetHeight }, "*");
         };
         new ResizeObserver(send).observe(document.body);
         window.addEventListener("load", send);
