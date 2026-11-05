@@ -83,6 +83,7 @@ organizers:
 #     title: "Paper or talk title"
 #     paper: https://arxiv.org/abs/...
 #     abstract: "One or two sentences on what will be discussed."
+#     abstract_full: "Optional longer version, used only in the weekly email."
 #     time: "" # only if different from the default above
 #     location: "" # e.g. the room, or "Zoom only"
 upcoming:
@@ -91,6 +92,16 @@ upcoming:
     title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
     location: Minkowski Room (W1148), Vector Institute
     abstract: >
+      ActDiff-VC is a generative video compression framework that pairs active
+      sampling with conditional video diffusion. Rather than transmitting
+      information for every frame, it adaptively selects keyframes from scene
+      dynamics and represents motion with a compact set of point trajectories,
+      and a conditional diffusion decoder reconstructs the video from these
+      sparse signals. On standard benchmarks it reaches up to 64.6% bitrate
+      reduction at comparable perceptual quality relative to strong learned
+      codecs.
+    # Used only by tools/announce.py (the weekly email); the page shows `abstract`.
+    abstract_full: >
       Compressing videos at extremely low bitrates presents a fundamental
       challenge: how can we preserve perceptual quality when only a small
       amount of information can be transmitted? While diffusion models offer

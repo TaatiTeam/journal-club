@@ -118,8 +118,9 @@ def main():
         body += zoom_line + "\n"
     if s.get("paper"):
         body += f"Paper: {s['paper']}\n"
-    if s.get("abstract"):
-        body += f"\nAbstract:\n{s['abstract'].strip()}\n"
+    abstract = s.get("abstract_full") or s.get("abstract")
+    if abstract:
+        body += f"\nAbstract:\n{abstract.strip()}\n"
     body += (
         f"\nThe full schedule and past sessions are at {PAGE_URL}. "
         "If you'd like to present in a future week, just reply to this email.\n\n"
