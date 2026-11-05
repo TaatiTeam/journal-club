@@ -15,8 +15,10 @@ Setup (once):
      Bcc, so members never see each other's addresses.
      Keep this file on your laptop only; it is not in the repo.
 
-Run:  python3 tools/announce.py            (opens a draft for the next session)
-      python3 tools/announce.py --dry-run  (prints what it would send)
+Run:  python3 tools/announce.py             (opens a draft for the next session)
+      python3 tools/announce.py --dry-run   (prints what it would send)
+      python3 tools/announce.py --attendees (copies every address to the
+                                             clipboard, for a calendar invite)
 """
 import csv, io, json, os, re, sys, urllib.parse, urllib.request, datetime, subprocess
 
@@ -93,6 +95,14 @@ def next_session():
 def main():
     dry = "--dry-run" in sys.argv
     cfg = load_config()
+    if "--attendees" in sys.argv:
+        # Everyone on the list, semicolon-separated, copied to the clipboard
+        # for pasting into an Outlook calendar invite's "Required" field.
+        people = emails_from_sheet(cfg["sheet_id"])
+        text = "; ".join(people)
+        subprocess.run(["pbcopy"], input=text.encode(), check=True)
+        print(f"Copied {len(people)} addresses to the clipboard. Paste into the invite's Required field.")
+        return
     norm = lambda xs: [x.strip().lower() for x in xs if "@" in x]
     to, cc = norm(cfg.get("to", [])), norm(cfg.get("cc", []))
     emails = []
