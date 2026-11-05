@@ -16,6 +16,13 @@ tagline: >
   Taati's group at the University of Toronto, KITE, and the Vector Institute
   since 2019.
 
+# Picture shown top right of the page. Blank hides it. The current one is
+# "Toronto - ON - Skyline10" by Taxiarchos228 on Wikimedia Commons (Free Art
+# License), which requires the credit line below.
+header_image: journal_club/header.jpg
+header_image_alt: Toronto skyline at dusk
+header_image_credit: "Photo: Taxiarchos228, Wikimedia Commons, Free Art License"
+
 # Meeting logistics. A field left blank is not shown.
 meeting:
   cadence: Tuesdays

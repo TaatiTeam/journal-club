@@ -14,8 +14,22 @@ layout: default
 {% assign signup_url = m.signup_url | default: '' %}
 {% assign signup_note = m.signup_note | default: '' %}
 {% assign archive_url = jc.archive_url | default: '' %}
+{% assign header_image = jc.header_image | default: '' %}
+{% assign header_rel = 'assets/img/' | append: header_image %}
+{% assign header_file = nil %}
+{% if header_image != '' %}
+{% assign header_file = site.static_files | where_exp: 'f', 'f.path contains header_rel' | first %}
+{% endif %}
 
 <div class="journal-club">
+
+{% if header_file %}
+
+<div class="jc-header-image">
+  {% include figure.liquid loading="eager" path=header_rel sizes="260px" alt=jc.header_image_alt %}
+  {% if jc.header_image_credit %}<div class="jc-credit">{{ jc.header_image_credit }}</div>{% endif %}
+</div>
+{% endif %}
 
 <p class="jc-tagline">{{ jc.tagline }}</p>
 
