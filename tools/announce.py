@@ -17,9 +17,8 @@ Setup (once):
 
 Run:  python3 tools/announce.py             (opens a draft for the next session)
       python3 tools/announce.py --dry-run   (prints what it would send)
-      python3 tools/announce.py --invite    (copies attendees to the clipboard
-                                             and prints the invite text; nothing
-                                             is opened or sent)
+      python3 tools/announce.py --invite    (opens a filled-in meeting form in
+                                             Outlook on the web; you press Send)
       python3 tools/announce.py --attendees (copies every address to the
                                              clipboard, for a hand-made invite)
 """
@@ -111,8 +110,9 @@ def ics_fold(line):
 
 
 def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry):
-    """Nothing is opened or sent. Copies the attendee list to the clipboard and
-    prints the title and description, for pasting into a new Outlook meeting."""
+    """Open Outlook on the web with a new meeting form filled in: attendees,
+    title, time, room, Zoom link and abstract. Nothing is sent until you press
+    Send in the browser."""
     organizer = (to or [""])[0]
     attendees = [e for e in cc + emails if e != organizer]
     summary = f"Journal Club: {speaker}" + (f' on "{title}"' if title else "")
@@ -120,16 +120,25 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
             + (zoom_line + "\n\n" if zoom_line else "")
             + (abstract + "\n\n" if abstract else "")
             + f"Schedule: {PAGE_URL}")
-    date = datetime.date.fromisoformat(s["date"]).strftime("%A, %B %-d, %Y")
+    location = where + (f"; Zoom: {ZOOM_URL}" if ZOOM_URL else "")
+    params = {
+        "subject": summary,
+        "startdt": f"{s['date']}T13:00:00",
+        "enddt": f"{s['date']}T14:00:00",
+        "location": location,
+        "body": desc,
+        "to": ",".join(attendees),
+        "allday": "false",
+    }
+    url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
     subprocess.run(["pbcopy"], input="; ".join(attendees).encode(), check=True)
-    print("Build the invite in Outlook (nothing has been sent):")
-    print("  1. Calendar > New Event (or New Meeting).")
-    print(f"  2. Required / Invitees: paste (Cmd+V). {len(attendees)} addresses are on your clipboard now.")
-    print(f"  3. Title: {summary}")
-    print(f"  4. When: {date}, 1:00–2:00 PM.   Location: {where}")
-    print("  5. Description: copy the text between the lines below.")
-    print("-" * 60); print(desc); print("-" * 60)
-    print("  6. Read it over, then press Send.")
+    print(f"Meeting form for {s['date']}: {len(attendees)} attendees, title, room, Zoom and abstract filled in.")
+    print("The attendee list is also on your clipboard in case the form drops it.")
+    if dry:
+        print(f"\nWould open ({len(url)} chars): {url[:120]}...\n\nTitle: {summary}\nLocation: {location}\n\n{desc}")
+        return
+    subprocess.run(["open", url], check=True)
+    print("Opened in your browser. Check it, switch off the Teams toggle if it is on, then press Send.")
 
 
 def main():
