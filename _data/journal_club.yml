@@ -91,14 +91,30 @@ upcoming:
     title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
     location: Minkowski Room (W1148), Vector Institute
     abstract: >
-      ActDiff-VC is a generative video compression framework that pairs active
-      sampling with conditional video diffusion. Rather than transmitting
-      information for every frame, it adaptively selects keyframes from scene
-      dynamics and represents motion with a compact set of point trajectories,
-      and a conditional diffusion decoder reconstructs the video from these
-      sparse signals. On standard benchmarks it reaches up to 64.6% bitrate
-      reduction at comparable perceptual quality relative to strong learned
-      codecs.
+      Compressing videos at extremely low bitrates presents a fundamental
+      challenge: how can we preserve perceptual quality when only a small
+      amount of information can be transmitted? While diffusion models offer
+      powerful generative priors for reconstructing realistic visual content,
+      effectively guiding their generation with minimal conditioning
+      information remains an open problem.
+
+
+      In this talk, I will present ActDiff-VC, a generative video compression
+      framework that combines active sampling with conditional video
+      diffusion. Instead of transmitting information for every frame, our
+      approach adaptively selects keyframes based on scene dynamics and
+      represents motion using a compact set of informative point
+      trajectories. A conditional diffusion decoder then reconstructs the
+      video from these sparse appearance and motion signals. I will discuss
+      our content-adaptive keyframe selection strategy, budget-aware
+      trajectory selection algorithm, and the integration of sparse motion
+      conditioning into diffusion-based reconstruction.
+
+
+      Experiments on standard video compression benchmarks demonstrate
+      substantial improvements in perceptual quality at ultra-low bitrates,
+      achieving up to 64.6% bitrate reduction at comparable perceptual quality
+      relative to strong learned codecs.
 
 # Past sessions, most recent first. Same fields as `upcoming`. Entries from
 # 2025 onward were copied from the archive on Babak's site.

@@ -56,12 +56,17 @@ def emails_from_sheet(sheet_id):
     return out
 
 
+ZOOM_URL = ""
+
+
 def next_session():
     """First entry of `upcoming:` in the schedule YAML."""
+    global ZOOM_URL
     text = fetch(DATA_URL)
     try:
         import yaml  # PyYAML, present on most Python installs
         data = yaml.safe_load(text)
+        ZOOM_URL = (data.get("meeting") or {}).get("zoom_url") or ""
         up = data.get("upcoming") or []
         if not up:
             return None
@@ -98,16 +103,27 @@ def main():
     if not s or not s.get("date"):
         sys.exit("No upcoming session in _data/journal_club.yml. Add one, push, and run again.")
     date = datetime.date.fromisoformat(s["date"]).strftime("%A, %B %-d")
-    title = s.get("title") or "title to be announced"
-    subject = f"Journal club {date}: {s.get('speaker', 'TBD')}"
-    body = (
-        f"Hi all,\n\nThis week's Computer Vision Journal Club:\n\n"
-        f"  {date}, 1:00–2:00 PM, {s.get('location') or 'Vector Institute'}\n"
-        f"  Speaker: {s.get('speaker', 'TBD')}\n"
-        f"  Title: {title}\n"
-        + (f"  Paper: {s['paper']}\n" if s.get("paper") else "")
-        + (f"\n{s['abstract']}\n" if s.get("abstract") else "")
-        + f"\nZoom link and schedule: {PAGE_URL}\n\nSee you there,\n{cfg.get('from_note', '')}\n"
+    speaker = s.get("speaker") or "a speaker to be announced"
+    title = s.get("title") or ""
+    where = s.get("location") or "the Vector Institute"
+    subject = f"Journal club next week: {speaker}" + (f' on "{title}"' if title else "")
+    zoom = ZOOM_URL
+    passcode = cfg.get("zoom_passcode", "")
+    zoom_line = (f"Zoom: {zoom}" + (f" (passcode {passcode})" if passcode else "")) if zoom else ""
+    body = f"Hi everyone,\n\nPlease join us next week for the Computer Vision Journal Club. {speaker} will be presenting"
+    body += f' "{title}".\n\n' if title else ".\n\n"
+    body += f"When: {date}, 1:00–2:00 PM\nWhere: {where}"
+    body += ", or on Zoom\n" if zoom else "\n"
+    if zoom_line:
+        body += zoom_line + "\n"
+    if s.get("paper"):
+        body += f"Paper: {s['paper']}\n"
+    if s.get("abstract"):
+        body += f"\nAbstract:\n{s['abstract'].strip()}\n"
+    body += (
+        f"\nThe full schedule and past sessions are at {PAGE_URL}. "
+        "If you'd like to present in a future week, just reply to this email.\n\n"
+        f"See you there,\n{cfg.get('from_note', '')}\n"
     )
     if dry:
         print(f"TO: {', '.join(to)}\nCC: {', '.join(cc)}\nBCC ({len(emails)}): {', '.join(emails)}\n\nSubject: {subject}\n\n{body}")
