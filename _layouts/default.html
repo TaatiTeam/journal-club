@@ -19,6 +19,19 @@
       rel="stylesheet"
       href="{{ '/assets/css/style.css' | relative_url }}"
     >
+    <script>
+      // Embed mode: another site (e.g. kimiashaban.github.io/journal-club/)
+      // shows this page in an iframe with ?embed=1&theme=light|dark. Hides
+      // the header and footer and follows the host's colour theme.
+      (function () {
+        var q = new URLSearchParams(location.search);
+        if (!q.has("embed")) return;
+        var h = document.documentElement;
+        h.classList.add("embed");
+        var t = q.get("theme");
+        if (t === "dark" || t === "light") h.setAttribute("data-theme", t);
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -43,5 +56,24 @@
       <a class="footer-brand" href="{{ '/' | relative_url }}">Computer vision. Shared perspectives.</a>
       <p>University of Toronto · KITE · Vector Institute <span aria-hidden="true">/</span> Since 2019</p>
     </footer>
+    <script>
+      (function () {
+        var h = document.documentElement;
+        if (!h.classList.contains("embed") || window.parent === window) return;
+        var send = function () {
+          parent.postMessage({ journalClubHeight: h.scrollHeight }, "*");
+        };
+        new ResizeObserver(send).observe(document.body);
+        window.addEventListener("load", send);
+        // Links to other sites leave the frame instead of opening inside it.
+        document.querySelectorAll('a[href^="http"], a[href^="mailto:"]').forEach(function (a) {
+          a.target = "_top";
+        });
+        window.addEventListener("message", function (e) {
+          var t = e.data && e.data.journalClubTheme;
+          if (t === "dark" || t === "light") h.setAttribute("data-theme", t);
+        });
+      })();
+    </script>
   </body>
 </html>

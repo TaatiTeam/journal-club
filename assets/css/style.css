@@ -660,7 +660,7 @@ h2 {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: #1e2321;
     --surface: #252b28;
     --tint: #303833;
@@ -671,6 +671,34 @@ h2 {
     --on-accent: #302027;
     --line: #414a43;
   }
+}
+/* Forced themes, used when embedded in a host site that has its own toggle. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #1e2321;
+  --surface: #252b28;
+  --tint: #303833;
+  --text: #eeece2;
+  --muted: #b3b9ae;
+  --accent: #e1a1ac;
+  --accent-hover: #f0b7c0;
+  --on-accent: #302027;
+  --line: #414a43;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+/* Embed mode (?embed=1): no header or footer, host page provides them. */
+html.embed {
+  scroll-behavior: auto;
+}
+html.embed .site-header,
+html.embed .site-footer,
+html.embed .skip-link {
+  display: none;
+}
+html.embed main {
+  padding-top: 0;
 }
 
 @media (max-width: 1000px) {
