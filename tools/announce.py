@@ -17,8 +17,10 @@ Setup (once):
 
 Run:  python3 tools/announce.py             (opens a draft for the next session)
       python3 tools/announce.py --dry-run   (prints what it would send)
+      python3 tools/announce.py --invite    (writes a calendar invite for the
+                                             next session and opens it in Outlook)
       python3 tools/announce.py --attendees (copies every address to the
-                                             clipboard, for a calendar invite)
+                                             clipboard, for a hand-made invite)
 """
 import csv, io, json, os, re, sys, urllib.parse, urllib.request, datetime, subprocess
 
@@ -92,6 +94,57 @@ def next_session():
     return entry
 
 
+def ics_escape(t):
+    return t.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+
+
+def ics_fold(line):
+    b = line.encode("utf-8"); out = []
+    while len(b) > 75:
+        cut = 75
+        while cut > 0 and (b[cut] & 0xC0) == 0x80:
+            cut -= 1
+        out.append(b[:cut]); b = b" " + b[cut:]
+    out.append(b)
+    return b"\r\n".join(out)
+
+
+def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry):
+    """Build a calendar invite (.ics, METHOD:REQUEST) for the session and open
+    it in Outlook. Organizer is the first `to` address; everyone else attends."""
+    d = s["date"].replace("-", "")
+    organizer = (to or ["kimia.shaban@mail.utoronto.ca"])[0]
+    attendees = [e for e in cc + emails if e != organizer]
+    summary = f"Journal Club: {speaker}" + (f' on "{title}"' if title else "")
+    desc = (f"{speaker}" + (f': "{title}"' if title else "") + "\n\n"
+            + (zoom_line + "\n\n" if zoom_line else "")
+            + (abstract + "\n\n" if abstract else "")
+            + f"Schedule: {PAGE_URL}")
+    lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//TaatiTeam//Journal Club//EN", "METHOD:REQUEST",
+             "BEGIN:VTIMEZONE", "TZID:America/Toronto",
+             "BEGIN:DAYLIGHT", "TZOFFSETFROM:-0500", "TZOFFSETTO:-0400", "TZNAME:EDT", "DTSTART:19700308T020000", "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU", "END:DAYLIGHT",
+             "BEGIN:STANDARD", "TZOFFSETFROM:-0400", "TZOFFSETTO:-0500", "TZNAME:EST", "DTSTART:19701101T020000", "RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU", "END:STANDARD",
+             "END:VTIMEZONE",
+             "BEGIN:VEVENT", f"UID:journal-club-{d}@taatiteam.github.io",
+             "DTSTAMP:" + datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ"),
+             f"DTSTART;TZID=America/Toronto:{d}T130000", f"DTEND;TZID=America/Toronto:{d}T140000",
+             f"SUMMARY:{ics_escape(summary)}", f"LOCATION:{ics_escape(where)}", f"DESCRIPTION:{ics_escape(desc)}",
+             f"URL:{PAGE_URL}", f"ORGANIZER;CN={ics_escape(cfg.get('from_note', 'Organizer'))}:mailto:{organizer}"]
+    lines += [f"ATTENDEE;ROLE=REQ-PARTICIPANT;RSVP=TRUE:mailto:{a}" for a in attendees]
+    lines += ["END:VEVENT", "END:VCALENDAR"]
+    path = os.path.expanduser(f"~/Downloads/journal-club-{s['date']}.ics")
+    with open(path, "wb") as f:
+        f.write(b"\r\n".join(ics_fold(l) for l in lines) + b"\r\n")
+    print(f"Invite written to {path} ({len(attendees)} attendees).")
+    if dry:
+        print(f"\nSummary: {summary}\nWhen: {s['date']} 13:00–14:00 America/Toronto\nWhere: {where}\n\n{desc}")
+        return
+    app = ["-a", "Microsoft Outlook"] if os.path.isdir("/Applications/Microsoft Outlook.app") else []
+    subprocess.run(["open", *app, path], check=True)
+    print("Opened in Outlook. If it shows as your meeting with the attendees listed, press Send; "
+          "if it only offers 'Add to calendar', create the invite by hand and paste the attendees (--attendees).")
+
+
 def main():
     dry = "--dry-run" in sys.argv
     cfg = load_config()
@@ -120,6 +173,7 @@ def main():
     zoom = ZOOM_URL
     passcode = cfg.get("zoom_passcode", "")
     zoom_line = (f"Zoom: {zoom}" + (f" (passcode {passcode})" if passcode else "")) if zoom else ""
+    abstract = (s.get("abstract_full") or s.get("abstract") or "").strip()
     body = f"Hi everyone,\n\nPlease join us next week for the Computer Vision Journal Club. {speaker} will be presenting"
     body += f' "{title}".\n\n' if title else ".\n\n"
     body += f"When: {date}, 1:00–2:00 PM\nWhere: {where}"
@@ -128,14 +182,16 @@ def main():
         body += zoom_line + "\n"
     if s.get("paper"):
         body += f"Paper: {s['paper']}\n"
-    abstract = s.get("abstract_full") or s.get("abstract")
     if abstract:
-        body += f"\nAbstract:\n{abstract.strip()}\n"
+        body += f"\nAbstract:\n{abstract}\n"
     body += (
         f"\nThe full schedule and past sessions are at {PAGE_URL}. "
         "If you'd like to present in a future week, just reply to this email.\n\n"
         f"See you there,\n{cfg.get('from_note', '')}\n"
     )
+    if "--invite" in sys.argv:
+        write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstract, dry)
+        return
     if dry:
         print(f"TO: {', '.join(to)}\nCC: {', '.join(cc)}\nBCC ({len(emails)}): {', '.join(emails)}\n\nSubject: {subject}\n\n{body}")
         return
