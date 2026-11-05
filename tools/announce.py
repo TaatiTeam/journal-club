@@ -115,7 +115,13 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     Nothing is sent until you press Send in the browser."""
     import html
     organizer = (to or [""])[0]
-    attendees = [e for e in cc + emails if e != organizer]
+    # Required: the `cc` list from the config (Babak) plus the speaker if the
+    # session has `speaker_email`. Optional: everyone else on the list.
+    required = [e for e in cc if e != organizer]
+    if s.get("speaker_email") and s["speaker_email"].lower() not in required:
+        required.append(s["speaker_email"].lower())
+    optional = [e for e in emails if e != organizer and e not in required]
+    attendees = required + optional
     date = datetime.date.fromisoformat(s["date"]).strftime("%A, %B %-d")
     summary = f"Journal Club, {datetime.date.fromisoformat(s['date']).strftime('%b %-d')}: {speaker}"
     passcode = cfg.get("zoom_passcode", "")
@@ -133,11 +139,11 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     paras.append(f'Schedule and past sessions: <a href="{PAGE_URL}">{PAGE_URL}</a>')
     body = "".join(f"<p>{p}</p>" for p in paras)
     params = {"subject": summary, "startdt": f"{s['date']}T13:00:00", "enddt": f"{s['date']}T14:00:00",
-              "location": where, "body": body, "to": ",".join(attendees), "allday": "false"}
+              "location": where, "body": body, "to": ",".join(required), "cc": ",".join(optional), "allday": "false"}
     url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
-    subprocess.run(["pbcopy"], input="; ".join(attendees).encode(), check=True)
-    print(f"Meeting form for {date}: {len(attendees)} attendees, title, room, Zoom and abstract filled in.")
-    print("Attendee list is also on your clipboard in case the form drops it.")
+    subprocess.run(["pbcopy"], input="; ".join(optional).encode(), check=True)
+    print(f"Meeting form for {date}: {len(required)} required ({', '.join(required)}), {len(optional)} optional.")
+    print("The optional list is also on your clipboard in case the form drops it. Add the speaker to Required by hand if not listed.")
     if dry:
         print(f"\nSubject: {summary}\nLocation: {where}\n\n" + body.replace("</p>", "\n\n").replace("<br>", "\n"))
         return

@@ -87,6 +87,7 @@ organizers:
 #     speaker: Jane Doe
 #     affiliation: University of Toronto
 #     speaker_url: ""
+#     speaker_email: "" # not shown on the page; makes the speaker a required attendee on the calendar invite
 #     title: "Paper or talk title"
 #     paper: https://arxiv.org/abs/...
 #     abstract: "One or two sentences on what will be discussed."
