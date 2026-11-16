@@ -15,7 +15,7 @@ tagline: >
   Paper discussions and guest talks on computer vision and machine learning,
   with a focus on human motion and health applications. Hosted at the
   University of Toronto, KITE, and the Vector Institute
-  [since 2019](https://www.cs.toronto.edu/~taati/journalclub.html).
+  [since 2015](https://www.cs.toronto.edu/~taati/journalclub.html).
   Open to anyone interested, from any lab.
 
 # Optional picture shown top right of the page. Blank hides it. To use one,
@@ -55,7 +55,7 @@ meeting:
 
 # Link shown under "Past sessions" for the older history.
 archive_url: https://www.cs.toronto.edu/~taati/journalclub.html
-archive_label: Sessions from 2019 to 2024 are listed on Babak Taati's site.
+archive_label: Sessions from 2015 to 2024 are listed on Babak Taati's site.
 
 # Organizing team, in display order.
 organizers:
@@ -83,6 +83,10 @@ organizers:
 #     speaker: Jane Doe
 #     affiliation: University of Toronto
 #     speaker_url: ""
+#     speakers: # instead of speaker_url when there are several people
+#       - name: Jane Doe
+#         url: https://...
+#       - name: John Roe
 #     speaker_image: "" # e.g. journal_club/speakers/jane-doe.jpg (put the file in assets/img/journal_club/speakers/)
 #     speaker_email: "" # not shown on the page; makes the speaker a required attendee on the calendar invite
 #     title: "Paper or talk title"
@@ -131,75 +135,110 @@ past:
   - date: 2026-11-10
     time: "12:00 PM"
     speaker: Amirhosein Javadi
+    speaker_url: https://importamir.github.io/
     title: "Active Sampling for Ultra-Low-Bit-Rate Video Compression via Conditional Controlled Diffusion"
     location: Minkowski Room (W1148), Vector Institute
   - date: 2026-09-29
     time: "9:00 AM"
     speaker: Terence Leung and team
+    speakers:
+      - name: Terence Leung
+        url: https://profiles.ucl.ac.uk/836-terence-leung
+      - name: team
     affiliation: UCL / HKU
     title: "Training a humanoid robot to reproduce Parkinsonian gait from CARE-PD gait data"
   - date: 2026-07-28
     speaker: Enming Zhang
   - date: 2026-07-14
     speaker: Andrew Fleet
+    speaker_url: https://www.linkedin.com/in/andrewfleet07/
     title: "RigAnyFace (NeurIPS 2025)"
   - date: 2026-06-23
     speaker: Alireza Keshavarzian
+    speaker_url: https://alirezakesha.github.io/
     title: "Random Representation Techniques for Time Series Forecasting"
   - date: 2026-06-02
     speaker: Andrew Peng
+    speaker_url: https://www.linkedin.com/in/andrew-peng-canada/
   - date: 2026-04-21
-    speaker: Armen and Minh
+    speaker: Armen Jeddi and Minh
+    speakers:
+      - name: Armen Jeddi
+        url: https://iatsl.org/people/ajeddi.html
+      - name: Minh
+        url: https://www.linkedin.com/in/nm-le/
     title: "Autoresearch (karpathy/autoresearch)"
   - date: 2026-04-14
     speaker: Lucas Mercier and Anaïs Chaumeil
+    speakers:
+      - name: Lucas Mercier
+        url: https://www.lucasmercier.me/
+      - name: Anaïs Chaumeil
+        url: https://www.linkedin.com/in/ana%C3%AFs-chaumeil-bb584716b/
     title: "Human pose estimation for gait analysis"
   - date: 2026-04-07
     time: "10:00 AM"
     speaker: Liang Xu
+    speaker_url: https://liangxuy.github.io/
     title: "Inter-X (CVPR 2024), ReGenNet (CVPR 2024), ActFormer (ICCV 2023)"
   - date: 2026-03-24
     speaker: Kimia Shaban
+    speaker_url: https://kimiashaban.github.io/
     title: "When Does RL Help Medical VLMs? Disentangling Vision, SFT, and RL Gains"
     paper: https://arxiv.org/abs/2603.01301
   - date: 2026-03-17
-    speaker: Amir
+    speaker: Amirhossein Kazerouni
+    speaker_url: https://amirhossein-kz.github.io/
     title: "Face2Scene (CVPR 2025)"
   - date: 2026-01-13
     speaker: Puyin (Pauline) Li
+    speaker_url: https://www.linkedin.com/in/puyin-li-32709a299/
     affiliation: Stanford
     title: "QuantiPhy"
   - date: 2025-11-25
     time: "12:00 PM"
     speaker: Saman Motamed
+    speaker_url: https://sam-motamed.github.io/
     affiliation: INSAIT
     title: "TRAVL and Physics-IQ"
   - date: 2025-11-25
     time: "12:00 PM"
     speaker: Donghoon Ahn
+    speaker_url: https://github.com/sunovivid/
     affiliation: KAIST AI
     title: "Fine-Grained Perturbation Guidance via Attention Head Selection (NeurIPS 2025)"
   - date: 2025-09-23
     speaker: Arshak Rezvani and Maryam Mirian
+    speakers:
+      - name: Arshak Rezvani
+        url: https://scholar.google.com/citations?user=ydaEPB0AAAAJ&hl=en
+      - name: Maryam Mirian
+        url: https://scholar.google.ca/citations?user=7etobUIAAAAJ&hl=en
     affiliation: UBC
     title: "DiffuseGaitNet"
   - date: 2025-08-12
-    speaker: Javad
+    speaker: Javad Rajabi
+    speaker_url: https://www.cs.toronto.edu/~rajabi/
     title: "Localizing Knowledge in Diffusion Transformers"
   - date: 2025-07-22
     speaker: Diwei Wang
+    speaker_url: https://scholar.google.com/citations?user=fO67E0wAAAAJ&hl=en
     title: "Gait video analysis with knowledge augmentation in a vision-language model (MICCAI 2024)"
   - date: 2025-07-08
-    speaker: Muzammil
+    speaker: Muhammad Muzammil
+    speaker_url: https://www.linkedin.com/in/muhammad-muzammil-150440241/
     title: "Pixel3DMM"
   - date: 2025-02-18
-    speaker: Armen
+    speaker: Armen Jeddi
+    speaker_url: https://iatsl.org/people/ajeddi.html
     title: "What matters when building vision-language models?"
   - date: 2025-02-04
-    speaker: Soroush
+    speaker: Soroush Mehraban
+    speaker_url: https://iatsl.org/people/smehraban.html
     title: "SynthLight"
   - date: 2025-01-21
-    speaker: Ali
+    speaker: Ali Ansari
+    speaker_url: https://github.com/allliance
     title: "Scanning Trojaned Models Using OOD Samples (NeurIPS 2024); RODEO (ICML 2024)"
   - date: 2025-01-08
     speaker: Paper discussion

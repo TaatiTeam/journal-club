@@ -7,6 +7,19 @@
 {% assign s_time = s.time | default: '' %}
 {% assign s_speaker_url = s.speaker_url | default: '' %}
 {% assign s_image = s.speaker_image | default: '' %}
+{% comment %} Speaker name(s). `speakers:` (list of name/url) wins over speaker + speaker_url. {% endcomment %}
+{% capture speaker_html -%}
+  {%- if s.speakers -%}
+    {%- for p in s.speakers -%}
+      {%- if forloop.index > 1 -%}{%- if forloop.last %} and {% else %}, {% endif -%}{%- endif -%}
+      {%- if p.url -%}<a href="{{ p.url | escape }}">{{ p.name | escape }}</a>{%- else -%}{{ p.name | escape }}{%- endif -%}
+    {%- endfor -%}
+  {%- elsif s_speaker_url != '' -%}
+    <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
+  {%- else -%}
+    {{ s.speaker | escape }}
+  {%- endif -%}
+{%- endcapture %}
 {% assign s_image_file = null %}
 {% if include.mode == 'upcoming' and s_image != '' %}
   {% assign s_image_rel = '/assets/img/' | append: s_image %}
@@ -61,11 +74,7 @@
           {{- s_title | escape -}}
         {%- endif %}
       {% else %}
-        {% if s_speaker_url != '' -%}
-          <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
-        {%- else -%}
-          {{- s.speaker | escape -}}
-        {%- endif %}
+        {{ speaker_html }}
       {% endif %}
     </h3>
     {% if s_title != '' or s_affiliation != '' %}
@@ -82,11 +91,7 @@
         {% endif %}
         <span>
         {% if s_title != '' %}
-          {% if s_speaker_url != '' -%}
-            <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
-          {%- else -%}
-            {{- s.speaker | escape -}}
-          {%- endif %}
+          {{ speaker_html }}
         {% endif %}
         {% if s_affiliation != '' -%}
           <span class="jc-affil">
