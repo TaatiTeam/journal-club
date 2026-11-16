@@ -164,7 +164,7 @@ past:
     speaker: Armen Jeddi and Minh
     speakers:
       - name: Armen Jeddi
-        url: https://iatsl.org/people/ajeddi.html
+        url: https://armenjeddi.github.io/
       - name: Minh
         url: https://www.linkedin.com/in/nm-le/
     title: "Autoresearch (karpathy/autoresearch)"
@@ -230,7 +230,7 @@ past:
     title: "Pixel3DMM"
   - date: 2025-02-18
     speaker: Armen Jeddi
-    speaker_url: https://iatsl.org/people/ajeddi.html
+    speaker_url: https://armenjeddi.github.io/
     title: "What matters when building vision-language models?"
   - date: 2025-02-04
     speaker: Soroush Mehraban
