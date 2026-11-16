@@ -154,7 +154,9 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     paras = [f"<b>Computer Vision Journal Club</b><br>{h(date)}, {h(tlabel)}<br>{h(where)}" + (", or on Zoom" if ZOOM_URL else "")]
     if ZOOM_URL:
         paras.append(f'<b>Join on Zoom:</b> <a href="{ZOOM_URL}">{ZOOM_URL}</a>' + (f"<br>Passcode: {h(passcode)}" if passcode else ""))
-    sp = f"<b>Speaker:</b> {h(speaker)}" + (f"<br><b>Title:</b> {h(title)}" if title else "")
+    sp_url = (s.get("speaker_url") or "").strip()
+    sp_name = f'<a href="{h(sp_url)}">{h(speaker)}</a>' if sp_url else h(speaker)
+    sp = f"<b>Speaker:</b> {sp_name}" + (f"<br><b>Title:</b> {h(title)}" if title else "")
     if s.get("paper"):
         sp += f'<br><b>Paper:</b> <a href="{s["paper"]}">{s["paper"]}</a>'
     paras.append(sp)
@@ -166,9 +168,30 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     params = {"subject": summary, "startdt": f"{s['date']}T{tstart}", "enddt": f"{s['date']}T{tend}",
               "location": where, "body": body, "to": ",".join(required), "cc": ",".join(optional), "allday": "false"}
     url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
+    # Outlook's sign-in fails on very long links, so the optional list goes on
+    # the clipboard instead of in the link when the link would be long.
+    paste_optional = len(url) > 1800
+    if paste_optional:
+        # Keep one optional address in the link so the Optional field is
+        # already there; the rest go on the clipboard. "optional_seed" in the
+        # config picks that address.
+        seed = (cfg.get("optional_seed") or "").strip().lower()
+        params["cc"] = seed
+        optional = [e for e in optional if e != seed]
+        short = (s.get("abstract") or "").strip()
+        if short and short != abstract:
+            # Shorter abstract from the page; the full one stays in the email.
+            short_paras = [h(p.strip()) for p in short.split("\n\n") if p.strip()]
+            body = body.replace("".join(f"<p>{p}</p>" for p in [h(p.strip()) for p in abstract.split("\n\n") if p.strip()]),
+                                "".join(f"<p>{p}</p>" for p in short_paras))
+            params["body"] = body
+        url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
     subprocess.run(["pbcopy"], input="; ".join(optional).encode(), check=True)
     print(f"Meeting form for {date}: {len(required)} required ({', '.join(required)}), {len(optional)} optional.")
-    print("The optional list is also on your clipboard in case the form drops it. Add the speaker to Required by hand if not listed.")
+    if paste_optional:
+        print("The optional attendees are NOT in the link: paste your clipboard into the Optional field.")
+    else:
+        print("The optional list is also on your clipboard in case the form drops it. Add the speaker to Required by hand if not listed.")
     if dry:
         print(f"\nSubject: {summary}\nLocation: {where}\n\n" + body.replace("</p>", "\n\n").replace("<br>", "\n"))
         return
