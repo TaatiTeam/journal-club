@@ -401,6 +401,15 @@ h2 {
   color: var(--muted);
   font-weight: 400;
 }
+.jc-speaker-photo {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 10px;
+  border: 1px solid var(--line);
+}
 .jc-abstract {
   margin-top: 18px;
   font-size: 13px;

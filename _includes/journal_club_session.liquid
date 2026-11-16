@@ -6,6 +6,12 @@
 {% assign s_date = s.date | default: '' %}
 {% assign s_time = s.time | default: '' %}
 {% assign s_speaker_url = s.speaker_url | default: '' %}
+{% assign s_image = s.speaker_image | default: '' %}
+{% assign s_image_file = null %}
+{% if include.mode == 'upcoming' and s_image != '' %}
+  {% assign s_image_rel = '/assets/img/' | append: s_image %}
+  {% assign s_image_file = site.static_files | where: 'path', s_image_rel | first %}
+{% endif %}
 {% assign s_affiliation = s.affiliation | default: '' %}
 {% assign s_title = s.title | default: '' %}
 {% assign s_paper = s.paper | default: '' %}
@@ -64,6 +70,17 @@
     </h3>
     {% if s_title != '' or s_affiliation != '' %}
       <p class="jc-speaker">
+        {% if s_image_file %}
+          <img
+            class="jc-speaker-photo"
+            src="{{ s_image_rel | relative_url }}"
+            alt=""
+            width="44"
+            height="44"
+            loading="lazy"
+          >
+        {% endif %}
+        <span>
         {% if s_title != '' %}
           {% if s_speaker_url != '' -%}
             <a href="{{ s_speaker_url | escape }}">{{ s.speaker | escape }}</a>
@@ -77,6 +94,7 @@
             {{- s_affiliation | escape -}}
           </span>
         {%- endif %}
+        </span>
       </p>
     {% endif %}
     {% if s_abstract != '' %}
