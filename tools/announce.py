@@ -172,8 +172,11 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
     if dry:
         print(f"\nSubject: {summary}\nLocation: {where}\n\n" + body.replace("</p>", "\n\n").replace("<br>", "\n"))
         return
-    subprocess.run(["open", url], check=True)
-    print("Opened in your browser. Check it, make sure no Teams link was added, then press Send.")
+    # "browser" in the config (e.g. "Zen", "Google Chrome") opens the form in
+    # that app instead of the default browser; sign in there first.
+    app = ["-a", cfg["browser"]] if cfg.get("browser") else []
+    subprocess.run(["open", *app, url], check=True)
+    print(f"Opened in {cfg.get('browser') or 'your browser'}. Check it, make sure no Teams link was added, then press Send.")
 
 
 def main():
