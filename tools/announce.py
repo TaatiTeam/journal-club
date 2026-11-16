@@ -178,13 +178,6 @@ def write_invite(cfg, s, to, cc, emails, speaker, title, where, zoom_line, abstr
         seed = (cfg.get("optional_seed") or "").strip().lower()
         params["cc"] = seed
         optional = [e for e in optional if e != seed]
-        short = (s.get("abstract") or "").strip()
-        if short and short != abstract:
-            # Shorter abstract from the page; the full one stays in the email.
-            short_paras = [h(p.strip()) for p in short.split("\n\n") if p.strip()]
-            body = body.replace("".join(f"<p>{p}</p>" for p in [h(p.strip()) for p in abstract.split("\n\n") if p.strip()]),
-                                "".join(f"<p>{p}</p>" for p in short_paras))
-            params["body"] = body
         url = "https://outlook.office.com/calendar/deeplink/compose?" + urllib.parse.urlencode(params)
     subprocess.run(["pbcopy"], input="; ".join(optional).encode(), check=True)
     print(f"Meeting form for {date}: {len(required)} required ({', '.join(required)}), {len(optional)} optional.")
